@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1656077326638.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "6|63|23|0|\n25|75|75|0|\n77|58|165|0|\n167|88|175|0|\n177|32|216|0|\n218|88|291|0|\n293|89|307|0|\n310|65|322|0|\n324|79|371|0|\n",
+    "hash" : "0",
+    "id" : "D98A6D3D",
+    "lastKnownWriteTime" : 1656083151,
+    "last_content_update" : 1656083151577,
+    "path" : "C:/Users/pieter/Downloads/GitHub/phuycke/PhD-code/Modeling/LBA/Scripts/dnLBA.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "431,0",
+        "scrollLine" : "410"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
