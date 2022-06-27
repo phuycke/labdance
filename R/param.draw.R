@@ -29,7 +29,7 @@
 
 param.draw <- function(base_par = c("a", "b", "t0", "sd"),
                        n_drift  = NULL,
-                       dynamic  = F) {
+                       dynamic  = F){
 
   # checking for faulty input
   stopifnot(exprs = {

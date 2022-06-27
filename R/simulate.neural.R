@@ -32,8 +32,20 @@
 #' @export
 #' @import rtdists
 
+simulate.neural <- function(sub_id    = 1,
+                            n_blocks  = 16,
+                            true_pars = NULL,
+                            sigma_gen = 0.01){
 
-simulate.neural <- function(sub_id, n_blocks, true_pars, sigma_gen = NULL){
+  # checking for faulty input
+  stopifnot(exprs = {
+    !all(is.null(c(sub_id, n_blocks, true_pars, sigma_gen)))
+    all(is.numeric(c(sub_id, n_blocks, sigma_gen)))
+    length(true_pars) > 5
+    length(names(true_pars)) == length(unique(names(true_pars)))
+    (sub_id > 0 & n_blocks > 0)
+    (sigma_gen > 0 & sigma_gen < 100)
+  })
 
   # placeholder for later
   all_dat = c()
@@ -41,16 +53,16 @@ simulate.neural <- function(sub_id, n_blocks, true_pars, sigma_gen = NULL){
   for (i in 1:n_blocks){
     # define a single block
     stim       = rep((4*i-3):(4*i), times = 8)
-    repetition = rep(1:8,     each  = 4)
+    repetition = rep(1:8, each  = 4)
     d          = data.frame(cbind(stim, repetition))
 
     # placeholders and block numbers
-    d$rt = -1
+    d$rt       = -1
     d$response = -1
     d$block_nr = i
 
     # drift rates positively correlated with repetition count
-    drifts = true_pars[5:12]
+    drifts = true_pars[grep("v_", names(true_pars))]
 
     for (j in 1:nrow(d)){
       # determine drift rate based on repetition count and target response
