@@ -1,0 +1,74 @@
+#' @title netinputs
+#'
+#' @description Generates how the netinputs at the output level of a dynamic
+#'     model evolve over time as a function of the learning rate beta and
+#'     the weight resets. Since our dynamic model has two output units, netinput
+#'     has N times 2 values, where N denotes the number of trials.
+#'
+#' @param beta The learning rate. Influences the change in model weights. Since
+#'     the netinput is the dot product of the input activation and the weights,
+#'     beta has a direct impact of the level of activation at the output units.
+#' @param wr Represents the weight resets that take place in our dynamic model.
+#'     This vector is a vector consisting of N binary values (0, 1), indicating
+#'     whether a weight reset at trial N has taken place. Hence, if a weight reset
+#'     takes place at trial 8, the first 8 elements of wr consist of 7 0's
+#'     followed by a single 1. This weight reset is needed to allows multiple
+#'     'learning events' to take place. More (but not too many!) events will
+#'     lead to a better recovery of beta.
+#'
+#' @return list consisting of M elements (the number of output units), where each
+#'     subset consists of N elements (the number of trials).
+#' @examples
+#' ni = netinputs(beta = 0.5,
+#' wr   = rep(c(rep(0, times = 31), 1),
+#'            times = 16))
+#' rbind(ni[[1]][1:8], ni[[1]][1:8])
+#'
+#' #      [,1] [,2] [,3] [,4]      [,5]      [,6]      [,7]      [,8]
+#' # [1,]  0.5  0.5  0.5  0.5 0.5621765 0.5621765 0.4378235 0.4378235
+#' # [2,]  0.5  0.5  0.5  0.5 0.5621765 0.5621765 0.4378235 0.4378235
+#'
+#' @export
+#' @import rtdists
+
+
+netinputs <- function(beta, wr){
+
+  stim = diag(4)
+  t    = matrix(c(1, 1, 0, 0, 0, 0, 1, 1),
+                nrow = 4)
+  w    = matrix(0,
+                nrow = nrow(stim),
+                ncol = ncol(t))
+
+  # data holder
+  df      = matrix(0,
+                   nrow = 512,
+                   ncol = 2)
+  trials  = rep(1:4,
+                times = 512 / 4)
+
+  # simulate
+  for (i in 1:length(trials)){
+    s = trials[i]
+    # input at output units, logistic activation function
+    netinput = 1 / (1 + exp(-(stim[s,] %*% w)))
+    stopifnot(round(sum(netinput), 10) == 1)
+
+    # weight update
+    A = matrix(stim[s,])
+    B = (t[s, ] - netinput)
+    w = w + beta * (A %*% B)
+
+    # save the netinputs (used during estimation of LR)
+    df[i,1:2] = netinput
+
+    # reset the weights based on random draw
+    if (wr[i] == 1){
+      w = matrix(0,
+                 nrow = nrow(stim),
+                 ncol = ncol(t))
+    }
+  }
+  return(list(df[,1], df[,2]))
+}

@@ -1,0 +1,320 @@
+#!/usr/bin/env Rscript
+
+# ---------------------------------------------------------------------------- #
+#   Author            Pieter Huycke                                            #
+#   GitHub            @phuycke                                                 # 
+#   Description       run dynamic neural LBA model and recover used parameters #
+#   Version.string    R version 3.6.3 (2020-02-29)                             #
+#   Platform          x86_64, mingw32                                          #
+#   Date created      02/03/2022                                               #
+# ---------------------------------------------------------------------------- #
+
+rm(list = ls())
+
+require(doParallel)
+require(foreach)
+require(logr)
+require(parallel)
+require(rtdists)
+
+# adjust the dLBA function with custom-made code
+# trace("dLBA", edit=T)
+
+# functions ----
+
+
+# get initial guess for LBA parameters
+get_start_lba <- function(base_par, n_drift = 8) {
+  start1 <- c(
+    a     = runif(1, 0, .75),
+    b     = runif(1, .75, 1.5), 
+    t0    = runif(1, 0.25, 0.75), 
+    sd    = runif(1, 0, 0.5),
+    beta  = runif(1, 0, 1)
+  )
+  return(start1)
+}
+
+
+# simulate RW data, reset W to 0 based every 32 trials
+simulate_data <- function(lba_p, beta, sigma_gen){
+  
+  # four stimuli and their targets
+  stimuli = diag(4)                                  
+  target  = matrix(c(1, 1, 0, 0, 0, 0, 1, 1), nrow = 4)
+  
+  # define weights, dataholder and trial order
+  w      = matrix(0, 
+                  nrow = nrow(stimuli), 
+                  ncol = ncol(target))
+  df     = data.frame(matrix(0, 
+                             nrow = 512, 
+                             ncol = 9))
+  trials = rep(1:nrow(stimuli), 
+               times = 512 / nrow(stimuli))
+  
+  # count the number of trials since last weight reset
+  counter    = 1
+  when_reset = round(rnorm(1, 32, 0))
+  
+  # for each trial change the weights
+  for (i in 1:length(trials)){
+    # determine which stimulus is shown
+    s = trials[i]
+    
+    # logistic function where all(sum(netinput) == 1)
+    netinput = 1 / (1 + exp(-(stimuli[s,] %*% w)))
+    stopifnot(round(sum(netinput), 10) == 1)
+    
+    # LBA trial estimation where netinputs to output unit serve as v1 and v2
+    df[i,1:2] = rLBA(1, 
+                     A      = lba_p["a"], 
+                     b      = lba_p["b"], 
+                     t0     = lba_p["t0"], 
+                     mean_v = as.vector(netinput), 
+                     sd_v   = c(lba_p["sd"], lba_p["sd"]), 
+                     silent = T)
+    
+    # add neural data
+    df[i,3] = rnorm(1, netinput[1], sigma_gen)
+    
+    # weight update
+    A = matrix(stimuli[s,])
+    B = (target[s, ] - netinput)
+    w = w + beta * (A %*% B)
+    
+    # save stimulus and associated target
+    df[i,4] = s
+    df[i,5] = which.max(target[s,])
+    
+    # save whether trials was correct or not
+    if(which.max(target[s,]) == df[i,2]){
+      df[i,6] = 1
+    } else{
+      df[i,6] = 0
+    }
+    
+    # when to reverse is drawn from N(m, s), reset W, counter and draw from N(m,s)
+    if (counter == when_reset){
+      w = matrix(0, nrow = nrow(stimuli), ncol = ncol(target))
+      #cat("Weight reset on trial", i, "\n")
+      df[i,7]    = T
+      counter    = 0
+      when_reset = round(rnorm(1, 32, 0))
+    } else{
+      df[i,7] = F
+    }
+    
+    # save the netinputs (used during estimation of LR) and increment counter for reset
+    df[i,8:9] = netinput
+    counter   = counter + 1
+  }
+  # change the column names and return the resulting dataframe
+  colnames(df) = c("rt", "response", "neural", "stimulus", "target", 
+                   "accuracy", "weight_reset", "mean_v1", "mean_v2")
+  return(df)
+}
+
+
+# simulate LBA trials based on passed LR
+netinputs_LBA <- function(learningrate, weight_reset){
+  
+  stim = diag(4)
+  t    = matrix(c(1, 1, 0, 0, 0, 0, 1, 1), 
+                nrow = 4)
+  w    = matrix(0, 
+                nrow = nrow(stim), 
+                ncol = ncol(t))
+  beta = learningrate
+  
+  # data holder
+  df      = matrix(0, 
+                   nrow = 512, 
+                   ncol = 2)
+  trials  = rep(1:4, 
+                times = 512 / 4)
+  
+  # simulate
+  for (i in 1:length(trials)){
+    s = trials[i]
+    # input at output units, logistic activation function
+    netinput = 1 / (1 + exp(-(stim[s,] %*% w)))
+    stopifnot(round(sum(netinput), 10) == 1)
+    
+    # weight update
+    A = matrix(stim[s,])
+    B = (t[s, ] - netinput)
+    w = w + beta * (A %*% B)
+    
+    # save the netinputs (used during estimation of LR)
+    df[i,1:2] = netinput
+    
+    # reset the weights based on random draw 
+    if (weight_reset[i] == 1){
+      w = matrix(0, 
+                 nrow = nrow(stim), 
+                 ncol = ncol(t))
+    }
+  }
+  return(list(df[,1], df[,2]))
+}
+
+
+# estimate underlying LBA parameters and LR
+behavioral_ll <- function(to_optim, rt, response, wr){
+  # simple parameters, fix all parameter to true value
+  par = c(A       = to_optim[[1]], 
+          b       = to_optim[[2]], 
+          t0      = to_optim[[3]], 
+          mean_v1 = F, 
+          mean_v2 = F, 
+          sd_v2   = to_optim[[4]])
+  spar = par[!grepl("[12]$", names(par))]  
+  
+  # distribution parameters
+  dist_par_names = unique(sub("[12]$", "", 
+                              grep("[12]$",
+                                   names(par), 
+                                   value = TRUE)))
+  dist_par = vector("list", 
+                    length = length(dist_par_names))
+  names(dist_par) = dist_par_names
+  for (i in dist_par_names) dist_par[[i]] = as.list(unname(par[grep(i, names(par))]))
+  dist_par$sd_v = c(dist_par$sd_v, dist_par$sd_v) # set common sd's
+  
+  # compute netinputs based on the fed in learning rate, and use this as drift rates
+  dist_par$mean_v = netinputs_LBA(learningrate = to_optim[[5]], 
+                                  weight_reset = wr)
+  
+  # compute -loglikelihood
+  d = do.call(dLBA, args = c(rt           = list(rt), 
+                             response     = list(response), 
+                             spar, 
+                             dist_par, 
+                             distribution = "norm", 
+                             silent       = TRUE))
+  if (any(d < 0e-10)){
+    return(1e6)
+  }
+  else{
+    return(-sum(log(d)))
+  }
+}
+
+
+# neural loglikelihood
+neural_ll <- function(to_optim, neural_dat, netinput_acc1){
+  return(sum((neural_dat - netinput_acc1)^2))
+}
+
+
+# summed loglikelihood
+summed_ll <- function(to_optim, rt, response, wr, neural_dat, netinput_acc1, sigma_mod){
+  ll_beh  = behavioral_ll(to_optim, rt, response, wr)
+  ll_neur = neural_ll(to_optim, neural_dat, netinput_acc1)
+  return(ll_beh + (1/(2*(sigma_mod)^2)) * ll_neur)
+}
+
+
+# parameter recovery
+recovery <- function(data, tries, sigma_mod){
+  
+  # actual parameter recovery
+  for (q in 1:tries){
+    start = get_start_lba()
+    o = tryCatch(optim(start,                                              # initial parameter guess
+                       summed_ll,                                          # goal function to optimize
+                       method        = "L-BFGS-B",                         # minimization method
+                       rt            = data$rt, 
+                       response      = data$response,                        
+                       wr            = data$weight_reset, 
+                       neural_dat    = data$neural,
+                       netinput_acc1 = data$mean_v1,
+                       sigma_mod     = sigma_mod,
+                       lower         = rep(0, times = length(start)),      # parameter lower bound
+                       upper         = rep(Inf, times = length(start)),    # parameter upper bound
+                       control       = list(maxit = 5000), 
+                       hessian       = TRUE),   
+                 error = function(e){NA})
+    # if o is not NA, AND if converged, AND if the LR estimate != 0 --> break
+    if (length(o) > 1){
+      if(o$convergence == 0){
+        if(!any(o$par < 0.0001)){
+          break
+        }
+      }
+    }
+  }
+  if (length(o) == 1){
+    return(rep(NA, times = length(start) + 2))
+  } else{
+    # save the lowest value of the eigen values of the Hessian
+    # all should be positive (> epsilon, with epsilon = 0.01) when minimizing
+    h = min(eigen(o$hessian)$values)
+    return(c(o$par, o$value, h))
+  }
+}
+
+
+# driver
+main <- function(subId, datadir, resdir, sigma_gen, sigma_mod){
+  # get true LBA parameters
+  true_pars = get_start_lba()
+  
+  # simulate some RW LBA data
+  d = simulate_data(lba_p     = true_pars[1:4],      # A, b, t0, sd               
+                    beta      = true_pars[5],        # learning rate
+                    sigma_gen = sigma_gen)           # generative sigma for neural data                    
+
+  # recover the used parameters based on the data
+  recov_pars = recovery(d, 500, sigma_mod)
+  
+  # bind the results together
+  names(true_pars)  = paste0(names(true_pars), "_t")
+  names(recov_pars) = paste0(names(recov_pars), "_r")
+  names(recov_pars)[length(recov_pars)-1] = "-loglik"
+  names(recov_pars)[length(recov_pars)] = "hess"
+  
+  out = c(true_pars, recov_pars)
+  
+  # save the dataset
+  filename = sprintf("dnLBA data - sub %02d sigma gen %.2f sigma mod %.2f.RData", subId, sigma_gen, sigma_mod)
+  save(d, file = file.path(datadir, filename))
+  # save the output file
+  filename = sprintf("dnLBA res - sub %02d sigma gen %.2f sigma mod %.2f.RData", subId, sigma_gen, sigma_mod)
+  save(out, file = file.path(resdir, filename))
+  
+  return(out)
+}
+
+
+# fitting ----
+
+# define root folder
+ROOT = "C:/Users/pieter/Downloads/GitHub/phuycke/PhD-code/Modeling/LBA/Data/Eight drift rates"
+
+# create results folder
+RESDIR  = file.path(ROOT, "Results", sprintf("dnLBA_simulation_%s", Sys.Date()))
+dir.create(RESDIR, showWarnings = FALSE)
+
+# open a log file and write first line
+tmp <- file.path(RESDIR, "simulation.log")
+lf <- log_open(tmp)
+log_print("Dynamic Neural Linear Ballistic Accumulator (dnLBA)")
+
+# create dataset folder and log
+DATADIR = file.path(ROOT, "Datasets", sprintf("dnLBA_simulation_%s", Sys.Date()))
+dir.create(DATADIR, showWarnings = FALSE)
+log_print("Create 'Datasets' folder")
+
+# parallel run: run simulation 200 times (5 cores) and log completion
+cl = makeCluster(5)
+registerDoParallel(cl)
+foreach (j=1:200, .packages = c("rtdists"), .combine=rbind) %dopar% {
+  main(j, DATADIR, RESDIR, 0.01, 0.01)
+  log_print(paste0(as.character(Sys.time()), ": subject ", j, " simulation completed"))
+}
+stopCluster(cl)
+
+# close log file
+log_close()
