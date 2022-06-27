@@ -27,8 +27,28 @@
 #' @import rtdists
 
 
-param.draw <- function(base_par, n_drift = NULL, dynamic = F) {
-  stopifnot((is.null(n_drift) & dynamic) | (!is.null(n_drift) & !dynamic))
+param.draw <- function(base_par = c("a", "b", "t0", "sd"),
+                       n_drift  = NULL,
+                       dynamic  = F) {
+
+  # checking for faulty input
+  stopifnot(exprs = {
+    all(is.character(base_par))
+    length(base_par) > 1
+    length(base_par) == length(unique(base_par))
+    (class(n_drift) %in% c("numeric", "NULL"))
+    is.logical(dynamic)
+    ((is.null(n_drift) & isTRUE(dynamic)) |
+        (!is.null(n_drift) & isFALSE(dynamic)))
+  })
+  if (is.numeric(n_drift)) stopifnot(n_drift > 1)
+  for (e in base_par) stopifnot(e %in% c("a", "b", "t0", "sd", "beta"))
+  if (!dynamic){
+    if("beta" %in% base_par){
+      stop("\nNon dynamic model but beta is asked.")
+    }
+  }
+
   s1 <- c(
     a    = runif(1, 0, .75),
     b    = runif(1, .75, 1.5),
@@ -37,9 +57,8 @@ param.draw <- function(base_par, n_drift = NULL, dynamic = F) {
     beta = runif(1, 0, 1)
   )
   if (dynamic){
-    return(s1)
+    return(s1[base_par])
   } else{
-    stopifnot(n_drift > 0)
     s2 <- sort(rnorm(n_drift, 0.5, 0.1), decreasing = F)
     names(s2) <- paste0("v_", seq_len(n_drift))
     return(c(s1[base_par], s2))

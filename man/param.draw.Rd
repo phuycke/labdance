@@ -4,7 +4,7 @@
 \alias{param.draw}
 \title{param.draw}
 \usage{
-param.draw(base_par, n_drift = NULL, dynamic = F)
+param.draw(base_par = c("a", "b", "t0", "sd"), n_drift = NULL, dynamic = F)
 }
 \arguments{
 \item{base_par}{The parameters that a user wants to generate.

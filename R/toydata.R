@@ -21,7 +21,7 @@
 #' @format An object of class \code{"data.frame"}
 #' \describe{
 #'  \item{rt}{Trial-specific reaction times)}
-#'  \item{response}{Choice data}
+#'  \item{response}{Choice data (binary responses)}
 #' }
 #' @references This data set was artificially created for the LABDANCE package.
 #' @keywords datasets

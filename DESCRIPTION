@@ -29,16 +29,16 @@ Imports:
     parallel (>= 3.6.3), 
     iterators (>= 1.0.13)
 Suggests:
-    testthat, 
-    glba, 
-    knitr, 
-    rmarkdown, 
-    dplyr, 
-    tidyr, 
-    purrr, 
-    lattice, 
-    latticeExtra, 
-    binom, 
+    testthat (>= 3.0.0),
+    glba,
+    knitr,
+    rmarkdown,
+    dplyr,
+    tidyr,
+    purrr,
+    lattice,
+    latticeExtra,
+    binom,
     RWiener
 VignetteBuilder:
     knitr
@@ -46,3 +46,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.2.0
+Config/testthat/edition: 3
