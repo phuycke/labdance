@@ -7,19 +7,34 @@
 likelihood.neural(to_optim, neural_data, conditions = NULL, netinput = NULL)
 }
 \arguments{
-\item{to_optim}{the parameter set}
+\item{to_optim}{The parameter set that needs to be optimized}
 
-\item{neural_data}{bla}
+\item{neural_data}{The neural data that is added. This neural data
+could represent anything: average spectral power, coherence, amplitudes ...
+There is only one major constraint: there has to be some kind of relationship
+between the inputted neural data and one (or multiple) LBA model parameter(s).
+In our case, we assume that a positive correlation exists between EEG alpha
+power (8 - 12 Hz) and the LBA drift rate.}
 
-\item{conditions}{bla}
+\item{conditions}{Optional: only needed when the model is not dynamic.
+Indicates the different conditions. For instance, when one
+has a fast and a slow condition, this vector could indicate whether a
+certain trial is fast (1) or slow (2). Different drift rates are then
+estimated for each condition, and which trials are used in the estimation
+process is determined by conditions.}
 
-\item{netinput}{bla}
+\item{netinput}{Optional: only needed when the model is dynamic. Represents
+the activation at the output level of a dynamic model. Thus, when your
+model has two output units, and it performs on N trials, then netinput
+will have the form N x 2. This vector essentially represents the drift
+rates on a trial-by-trial basis, and is hence only used in dynamic models.}
 }
 \value{
-A data.frame containing behavioral and/or neural data.
+A numeric value indicating the likelihood of a parameter set given
+    data
 }
 \description{
-Calculates the likelihood based on the passed neural data
+Calculates the likelihood given passed (neural) data.
 }
 \examples{
 true = param_draw(base_par = c("a", "b", "t0", "sd"), n_drift  = 8, dynamic  = F)
@@ -29,5 +44,6 @@ nLBA  = simulate.data(sub_id   = 1,
                       sigma_gen = 0.01)
 
 likelihood.neural(true, nLBA$neural, nLBA$repetition)
+# [1] 0.04885457
 
 }

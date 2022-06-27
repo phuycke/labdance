@@ -1,4 +1,4 @@
-#' @title param_draw
+#' @title param.draw
 #'
 #' @description Generates (d)(n)LBA parameters within a reasonable range.
 #'
@@ -17,7 +17,7 @@
 #' @import rtdists
 
 
-param_draw <- function(base_par, n_drift = NULL, dynamic = F) {
+param.draw <- function(base_par, n_drift = NULL, dynamic = F) {
   stopifnot((is.null(n_drift) & dynamic) | (!is.null(n_drift) & !dynamic))
   s1 <- c(
     a    = runif(1, 0, .75),
