@@ -34,7 +34,7 @@ param.draw <- function(base_par = c("a", "b", "t0", "sd"),
   # checking for faulty input
   stopifnot(exprs = {
     all(is.character(base_par))
-    length(base_par) > 1
+    length(base_par) > 0
     length(base_par) == length(unique(base_par))
     (class(n_drift) %in% c("numeric", "NULL"))
     is.logical(dynamic)

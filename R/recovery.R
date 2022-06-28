@@ -45,7 +45,7 @@ recovery <- function(base_par,
                      sigma_mod = NULL){
 
   # determine the type of data
-  if ("mean_v1" %in% colnames(df)){
+  if ("beta" %in% base_par){
     dynamic = T
     n_drift = NULL
   } else{
@@ -55,7 +55,7 @@ recovery <- function(base_par,
 
   # actual parameter recovery
   for (q in 1:cycles){
-    o = tryCatch(optim(param_draw(base_par = base_par,                     # initial parameter guess
+    o = tryCatch(optim(param.draw(base_par = base_par,                     # initial parameter guess
                                   n_drift  = n_drift,
                                   dynamic  = dynamic),
                        likelihood.summed,                                  # goal function to optimize

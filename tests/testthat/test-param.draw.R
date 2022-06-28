@@ -25,3 +25,26 @@ test_that("param.draw handles faulty input correctly", {
                           n_drift = 8,
                           dynamic = F))
 })
+
+
+# generate input for the four different models
+test_that("the functions provides decent input for each of the four models", {
+  # two cases for the simple LBA / nLBA
+  expect_length(param.draw(base_par = c("a", "b", "t0"),
+                           n_drift = 8,
+                           dynamic = F),
+                11)
+  expect_length(param.draw(n_drift  = 4,
+                           dynamic  = F),
+                8)
+  # three cases for the dLBA / dnLBA
+  expect_length(param.draw(base_par = c("a"),
+                           dynamic = T),
+                1)
+  expect_length(param.draw(dynamic = T),
+                4)
+  expect_length(param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                           dynamic = T),
+                5)
+
+})
