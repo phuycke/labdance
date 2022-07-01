@@ -4,7 +4,7 @@
 \alias{netinputs}
 \title{netinputs}
 \usage{
-netinputs(beta, wr)
+netinputs(beta)
 }
 \arguments{
 \item{beta}{The learning rate. Influences the change in model weights. Since

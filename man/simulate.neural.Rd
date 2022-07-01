@@ -4,7 +4,13 @@
 \alias{simulate.neural}
 \title{simulate.neural}
 \usage{
-\method{simulate}{neural}(sub_id = 1, n_blocks = 16, true_pars = NULL, sigma_gen = 0.01)
+\method{simulate}{neural}(
+  sub_id = 1,
+  n_blocks = 16,
+  true_pars = NULL,
+  sigma_gen = NULL,
+  dataset = NULL
+)
 }
 \arguments{
 \item{sub_id}{The subject identifier. Can be used to generate different datasets
@@ -16,6 +22,11 @@ that each belong to a different "subject".}
 
 \item{sigma_gen}{Optional: only for neural models.
 The variance in the generation of the true neural data.}
+
+\item{dataset}{Optional: only when empirical data is available.
+Replaces the stimuli and repetitions by information observed in the data. Hence,
+this allows data to be generated relying on stimuli actually seen by
+subjects.}
 }
 \value{
 data.frame containing behavioral and neural data.
@@ -25,21 +36,29 @@ Helper function called by simulate.data() whenever data from
     a neural model (nLBA, dnLBA) needs to be generated.
 }
 \examples{
-true = param_draw(base_par = c("a", "b", "t0", "sd"),
+require(labdance)
+
+# load prepared empirical data
+load("data/sub-02 - simulate.neural.RData")
+
+# get LBA parameters (8 drift rates)
+true = param.draw(base_par = c("a", "b", "t0", "sd"),
                   n_drift  = 8,
-                  dynamic  = F)
-simulated  = simulate.data(sub_id    = 1,
-                           n_blocks  = 16,
-                           true_pars = true,
-                           sigma_gen = 0.01)
+                  dynamic  = FALSE)
+# simulate data retaining the stimulus order shown to subject 2,
+# and add neural data
+simulated = simulate.neural(true_pars = true,
+                            sigma_gen = 0.01,
+                            dataset   = d)
 head(simulated)
 
-#     stim repetition       rt response block_nr    neural subject
-# 1      1          1 1.801657        2        1 0.4283653       1
-# 2      2          1 2.364796        2        1 0.4475578       1
-# 3      3          1 1.465132        2        1 0.4494453       1
-# 4      4          1 1.373814        2        1 0.4271550       1
-# 5      1          2 1.387029        2        1 0.4611560       1
-# 6      2          2 1.150407        2        1 0.4488713       1
+#   sub_id stim repetition block_nr       rt response    neural
+# 1      1    1          1        1 2.307668        2 0.3879920
+# 2      1    1          2        1 2.249775        2 0.3650512
+# 3      1    3          1        1 2.072044        2 0.3590010
+# 4      1    4          1        1 2.409889        2 0.3652670
+# 5      1    2          1        1 1.707635        2 0.3779034
+# 6      1    3          2        1 1.931923        2 0.3952722
+
 
 }

@@ -4,69 +4,95 @@
 #'     a dynamic model (dLBA, dnLBA) needs to be generated.
 #'
 #' @param true_pars The LBA parameters used to generate the data.
+#' @param n_blocks Determines the number of experimental blocks within a dataset.
 #' @param sigma_gen Optional: only for neural models.
-#'     The variance in the generation of the true neural data..
+#'     The variance in the generation of the true neural data.
+#' @param dataset Optional: only when empirical data is available.
+#'     Replaces the stimuli and conditions by information observed in the data. Hence,
+#'     this allows data to be generated relying on stimuli actually seen by
+#'     subjects.
 #'
 #' @return data.frame containing behavioral and/or neural data.
 #' @examples
-#' true = param_draw(dynamic = T)
-#' simulated = simulate.data(true_pars = true)
+#' require(labdance)
 #'
+#' # load prepared empirical data
+#' load("data/sub-02 - simulate.dynamic.RData")
+#'
+#' # get dLBA parameters
+#' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+#'                   n_drift  = NULL,
+#'                   dynamic  = TRUE)
+#' # simulate data retaining the stimulus order shown to subject 2
+#' simulated = simulate.dynamic(true_pars = true,
+#'                              n_blocks  = 16,
+#'                              dataset   = d)
 #' head(simulated)
 #'
-#'             rt response stimulus target accuracy weight_reset   mean_v1   mean_v2
-#' # 1   2.371192        2        1      1        0            0 0.5000000 0.5000000
-#' # 2   1.845616        1        2      1        1            0 0.5000000 0.5000000
-#' # 3   1.680268        2        3      2        1            0 0.5000000 0.5000000
-#' # 4   2.375538        2        4      2        1            0 0.5000000 0.5000000
-#' # 5   2.201994        2        1      1        0            0 0.5318979 0.4681021
-#' # 6   2.131396        1        2      1        1            0 0.5318979 0.4681021
+#' #   stim target condition       rt response   mean_v1   mean_v2
+#' # 1    1      1     novel 1.288473        1 0.5000000 0.5000000
+#' # 2    1      1     novel 2.598099        1 0.6120281 0.3879719
+#' # 3    3      2     novel 1.772595        1 0.5000000 0.5000000
+#' # 4    4      2     novel 2.151232        2 0.5000000 0.5000000
+#' # 5    2      1     novel 3.077246        2 0.5000000 0.5000000
+#' # 6    3      2     novel 2.072611        2 0.3879719 0.6120281
 #'
 #' @export
 #' @import rtdists
 
 
 # simulate RW data, reset W to 0 based every 32 trials
-simulate.dynamic <- function(true_pars,
-                             sigma_gen = NULL){
+simulate.dynamic <- function(n_blocks  = 16,
+                             true_pars = NULL,
+                             sigma_gen = NULL,
+                             dataset   = NULL){
 
   # four stimuli and their targets
-  stimuli = diag(4)
-  target  = matrix(c(1, 1, 0, 0, 0, 0, 1, 1), nrow = 4)
+  stim = diag(4)
+  t  = matrix(c(1, 1, 0, 0, 0, 0, 1, 1), nrow = 4)
 
   # define weights, dataholder and trial order
-  w      = matrix(0,
-                  nrow = nrow(stimuli),
-                  ncol = ncol(target))
-  df     = data.frame(matrix(0,
-                             nrow = 512,
-                             ncol = 8))
-  # column names (used laeter)
-  c_names = c("rt", "response", "stimulus", "target",
-              "accuracy", "weight_reset", "mean_v1", "mean_v2")
+  w_nov = matrix(0,
+                 nrow = nrow(stim),
+                 ncol = ncol(t))
+  w_rep = matrix(0,
+                 nrow = nrow(stim),
+                 ncol = ncol(t))
+
+  df = data.frame(matrix(NA,
+                         nrow = ifelse(is.null(dataset), n_blocks * 32, nrow(dataset)),
+                         ncol = 7))
+  # column names (used later)
+  colnames(df) = c("stim", "target", "condition", "rt", "response",
+                   "mean_v1", "mean_v2")
+
   # add an extra column for neural data if needed
   if (!is.null(sigma_gen)){
-    df = cbind(df, rep(0, times = nrow(df)))
-    c_names = c(c_names, "neural")
+    df$neural = NA
   }
-  trials = rep(1:nrow(stimuli),
-               times = 512 / nrow(stimuli))
 
-  # count the number of trials since last weight reset
-  counter    = 1
-  when_reset = round(rnorm(1, 32, 0))
+  # determine the stimuli
+  if (is.null(dataset)){
+    df$stim = rep(1:4, times = n_blocks * 32 / 4)
+    df$condition = rep(rep(c("novel", "repeating"), each = 32), times = n_blocks / 2)
+  } else{
+    df$stim = dataset$stim
+    df$condition = dataset$condition
+  }
 
   # for each trial change the weights
-  for (i in 1:length(trials)){
-    # determine which stimulus is shown
-    s = trials[i]
-
-    # logistic function where all(sum(netinput) == 1)
-    netinput = 1 / (1 + exp(-(stimuli[s,] %*% w)))
+  for (i in 1:nrow(df)){
+    s = df$stim[i]
+    # input at output units, logistic activation function
+    if (df$condition[i] == "novel"){
+      netinput = 1 / (1 + exp(-(stim[s,] %*% w_nov)))
+    } else{
+      netinput = 1 / (1 + exp(-(stim[s,] %*% w_rep)))
+    }
     stopifnot(round(sum(netinput), 10) == 1)
 
     # LBA trial estimation where netinputs to output unit serve as v1 and v2
-    df[i,1:2] = rLBA(1,
+    df[i,4:5] = rLBA(1,
                      A      = true_pars["a"],
                      b      = true_pars["b"],
                      t0     = true_pars["t0"],
@@ -76,44 +102,29 @@ simulate.dynamic <- function(true_pars,
 
     # add neural data
     if (!is.null(sigma_gen)){
-      df[i,9] = rnorm(1, netinput[1], sigma_gen)
+      df$neural[i] = rnorm(1, netinput[1], sigma_gen)
     }
 
     # weight update
-    A = matrix(stimuli[s,])
-    # TODO: dit deel verwijderen: * netinput * (1 - netinput) in lijn met cross entropy error function
-    # error functie is een bernoulli verdeling (ipv een normaalverdeling zoals we initieel zeiden)
-    B = (target[s, ] - netinput)
-    w = w + true_pars["beta"] * (A %*% B)
+    A = matrix(stim[s,])
+    B = (t[s, ] - netinput)
+    # input at output units, logistic activation function
+    if (df$condition[i] == "novel"){
+      w_nov = w_nov + true_pars["beta"] * (A %*% B)
+    } else{
+      w_rep = w_rep + true_pars["beta"] * (A %*% B)
+    }
 
     # save stimulus and associated target
-    df[i,3] = s
-    df[i,4] = which.max(target[s,])
+    df[i,6:7] = netinput
+    df$target[i] = which.max(t[s, ])
 
-    # save whether trials was correct or not
-    if(which.max(target[s,]) == df[i,2]){
-      df[i,5] = 1
-    } else{
-      df[i,5] = 0
+    # reset the weights based on random draw
+    if (i %% 32 == 0 & df$condition[i] == "novel"){
+      w_nov = matrix(0,
+                     nrow = nrow(stim),
+                     ncol = ncol(t))
     }
-
-    # when to reverse is drawn from N(m, s), reset W, counter and draw from N(m,s)
-    if (counter == when_reset){
-      w = matrix(0, nrow = nrow(stimuli), ncol = ncol(target))
-      #cat("Weight reset on trial", i, "\n")
-      df[i,6]    = T
-      counter    = 0
-      when_reset = round(rnorm(1, 32, 0))
-    } else{
-      df[i,6] = F
-    }
-
-    # save the netinputs (used during estimation of LR) and increment counter for reset
-    df[i,7:8] = netinput
-    counter   = counter + 1
   }
-  # change the column names and return the resulting dataframe
-  colnames(df) = c("rt", "response", "stimulus", "target",
-                   "accuracy", "weight_reset", "mean_v1", "mean_v2")
   return(df)
 }

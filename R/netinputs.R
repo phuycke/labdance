@@ -32,7 +32,7 @@
 #' @import rtdists
 
 
-netinputs <- function(beta, wr){
+netinputs <- function(beta){
 
   stim = diag(4)
   t    = matrix(c(1, 1, 0, 0, 0, 0, 1, 1),
@@ -64,7 +64,7 @@ netinputs <- function(beta, wr){
     df[i,1:2] = netinput
 
     # reset the weights based on random draw
-    if (wr[i] == 1){
+    if (wr[i] %% 32 == 0){
       w = matrix(0,
                  nrow = nrow(stim),
                  ncol = ncol(t))

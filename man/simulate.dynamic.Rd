@@ -4,13 +4,20 @@
 \alias{simulate.dynamic}
 \title{simulate.dynamic}
 \usage{
-\method{simulate}{dynamic}(true_pars, sigma_gen = NULL)
+\method{simulate}{dynamic}(n_blocks = 16, true_pars = NULL, sigma_gen = NULL, dataset = NULL)
 }
 \arguments{
+\item{n_blocks}{Determines the number of experimental blocks within a dataset.}
+
 \item{true_pars}{The LBA parameters used to generate the data.}
 
 \item{sigma_gen}{Optional: only for neural models.
-The variance in the generation of the true neural data..}
+The variance in the generation of the true neural data.}
+
+\item{dataset}{Optional: only when empirical data is available.
+Replaces the stimuli and conditions by information observed in the data. Hence,
+this allows data to be generated relying on stimuli actually seen by
+subjects.}
 }
 \value{
 data.frame containing behavioral and/or neural data.
@@ -20,17 +27,27 @@ Helper function called by simulate.data() whenever data from
     a dynamic model (dLBA, dnLBA) needs to be generated.
 }
 \examples{
-true = param_draw(dynamic = T)
-simulated = simulate.data(true_pars = true)
+require(labdance)
 
+# load prepared empirical data
+load("data/sub-02 - simulate.dynamic.RData")
+
+# get dLBA parameters
+true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                  n_drift  = NULL,
+                  dynamic  = TRUE)
+# simulate data retaining the stimulus order shown to subject 2
+simulated = simulate.dynamic(true_pars = true,
+                             n_blocks  = 16,
+                             dataset   = d)
 head(simulated)
 
-            rt response stimulus target accuracy weight_reset   mean_v1   mean_v2
-# 1   2.371192        2        1      1        0            0 0.5000000 0.5000000
-# 2   1.845616        1        2      1        1            0 0.5000000 0.5000000
-# 3   1.680268        2        3      2        1            0 0.5000000 0.5000000
-# 4   2.375538        2        4      2        1            0 0.5000000 0.5000000
-# 5   2.201994        2        1      1        0            0 0.5318979 0.4681021
-# 6   2.131396        1        2      1        1            0 0.5318979 0.4681021
+#   stim target condition       rt response   mean_v1   mean_v2
+# 1    1      1     novel 1.288473        1 0.5000000 0.5000000
+# 2    1      1     novel 2.598099        1 0.6120281 0.3879719
+# 3    3      2     novel 1.772595        1 0.5000000 0.5000000
+# 4    4      2     novel 2.151232        2 0.5000000 0.5000000
+# 5    2      1     novel 3.077246        2 0.5000000 0.5000000
+# 6    3      2     novel 2.072611        2 0.3879719 0.6120281
 
 }
