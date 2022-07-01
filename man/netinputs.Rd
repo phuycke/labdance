@@ -4,20 +4,17 @@
 \alias{netinputs}
 \title{netinputs}
 \usage{
-netinputs(beta)
+netinputs(beta = 0.5, dataset = NULL)
 }
 \arguments{
 \item{beta}{The learning rate. Influences the change in model weights. Since
 the netinput is the dot product of the input activation and the weights,
 beta has a direct impact of the level of activation at the output units.}
 
-\item{wr}{Represents the weight resets that take place in our dynamic model.
-This vector is a vector consisting of N binary values (0, 1), indicating
-whether a weight reset at trial N has taken place. Hence, if a weight reset
-takes place at trial 8, the first 8 elements of wr consist of 7 0's
-followed by a single 1. This weight reset is needed to allows multiple
-'learning events' to take place. More (but not too many!) events will
-lead to a better recovery of beta.}
+\item{dataset}{Optional: only when empirical data is available.
+Replaces the stimuli and condition info by empirical data. Hence,
+this allows data to be generated relying on stimuli actually seen by
+subjects.}
 }
 \value{
 list consisting of M elements (the number of output units), where each
@@ -30,13 +27,27 @@ Generates how the netinputs at the output level of a dynamic
     has N times 2 values, where N denotes the number of trials.
 }
 \examples{
-ni = netinputs(beta = 0.5,
-wr = rep(c(rep(0, times = 31), 1),
-         times = 16))
-rbind(ni[[1]][1:8], ni[[1]][1:8])
+require(labdance)
 
-#      [,1] [,2] [,3] [,4]      [,5]      [,6]      [,7]      [,8]
-# [1,]  0.5  0.5  0.5  0.5 0.5621765 0.5621765 0.4378235 0.4378235
-# [2,]  0.5  0.5  0.5  0.5 0.5621765 0.5621765 0.4378235 0.4378235
+# load prepared empirical data
+load("data/sub-02 - simulate.dynamic.RData")
+
+# simulate netinputs based on data and low beta
+ni = netinputs(beta = .2,
+               dataset = d)
+print(rbind(ni[[1]][20:25], ni[[2]][20:25]))
+
+#            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
+# [1,] 0.4082713 0.4082713 0.5917287 0.6112978 0.6296023 0.3887022
+# [2,] 0.5917287 0.5917287 0.4082713 0.3887022 0.3703977 0.6112978
+
+# simulate netinputs based on data and high beta
+ni = netinputs(beta = .7,
+               dataset = d)
+print(rbind(ni[[1]][20:25], ni[[2]][20:25]))
+
+#            [,1]      [,2]      [,3]      [,4]     [,5]      [,6]
+# [1,] 0.2523346 0.2523346 0.7476654 0.7795135 0.804895 0.2204865
+# [2,] 0.7476654 0.7476654 0.2523346 0.2204865 0.195105 0.7795135
 
 }

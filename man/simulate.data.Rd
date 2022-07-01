@@ -24,6 +24,10 @@ Determines the number of experimental blocks within a dataset.}
 
 \item{sigma_gen}{Optional: only for neural models.
 The variance in the generation of the true neural data.}
+
+\item{dataset}{Optional: only when empirical data is available.
+This allows data to be generated relying on stimuli actually seen by
+subjects.}
 }
 \value{
 data.frame containing simulated behavioral and/or neural data

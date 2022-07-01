@@ -11,6 +11,9 @@
 #' @param true_pars The LBA parameters used to generate the data.
 #' @param sigma_gen Optional: only for neural models.
 #'     The variance in the generation of the true neural data.
+#' @param dataset Optional: only when empirical data is available.
+#'     This allows data to be generated relying on stimuli actually seen by
+#'     subjects.
 #'
 #' @return data.frame containing simulated behavioral and/or neural data
 #'     depending on the underlying model.
