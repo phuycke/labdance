@@ -4,24 +4,7 @@
 #'     (i.e. reaction times and choice) data
 #'
 #' @param to_optim The likelihood for parameter set to_optim is calculated.
-#' @param rt Trial-by-trial reaction times used for maximum likelihood
-#'     estimation. Combined with choice data when finding the most likely parameter
-#'     set.
-#' @param response Trial-by-trial choice data used for maximum likelihood
-#'     estimation. Combined with RT data when finding the most likely parameter
-#'     set.
-#' @param conditions Optional: only needed in non dynamic models.
-#'     Indicates the different conditions. For instance, when one
-#'     has a fast and a slow condition, this vector could indicate whether a
-#'     certain trial is fast (1) or slow (2). Different drift rates are then
-#'     estimated for each condition, and which trials are used in the estimation
-#'     process is determined by conditions.
-#' @param wr Optional: only needed in dynamic models.
-#'     Represents the weight resets that take place in our dynamic model.
-#'     This vector is a vector consisting of N binary values (0, 1), indicating
-#'     whether a weight reset at trial N has taken place. Hence, if a weight reset
-#'     takes place at trial 8, the first 8 elements of wr consist of 7 0's
-#'     followed by a single 1.
+#' @param dataset Bla bla
 #'
 #' @return numeric value indicating the likelihood of a parameter set given
 #'     the available behavioral data.
@@ -42,36 +25,32 @@
 
 
 negloglik.behavioral <- function(to_optim,
-                                 rt,
-                                 response,
-                                 conditions = NULL,
-                                 wr         = NULL){
+                                 dataset){
 
   # at least one of the two must be NULL
-  stopifnot((!is.null(conditions) & is.null(wr)) | (is.null(conditions) & !is.null(wr)))
-  if (is.null(conditions)){
-    conditions = 1
+  if (is.null(dataset$repetition)){
+    dataset$repetition = 1
   }
 
   # summed loglik
   sum_ll = 0
 
-  for (i in seq_along(unique(conditions))){
+  for (i in seq_along(unique(dataset$repetition))){
 
     # assign parameters to variable names
-    if (is.null(wr)){
-      par = c(A       = to_optim[["a"]],
-              b       = to_optim[["b"]],
-              t0      = to_optim[["t0"]],
-              mean_v1 = to_optim[[grep(sprintf("v_%d", i), names(to_optim))]],
-              mean_v2 = 1-to_optim[[grep(sprintf("v_%d", i), names(to_optim))]],
-              sd_v2   = to_optim[["sd"]])
-    } else{
+    if ("beta" %in% names(to_optim)){
       par = c(A       = to_optim[["a"]],
               b       = to_optim[["b"]],
               t0      = to_optim[["t0"]],
               mean_v1 = F,
               mean_v2 = F,
+              sd_v2   = to_optim[["sd"]])
+    } else{
+      par = c(A       = to_optim[["a"]],
+              b       = to_optim[["b"]],
+              t0      = to_optim[["t0"]],
+              mean_v1 = to_optim[[grep(sprintf("v_%d", i), names(to_optim))]],
+              mean_v2 = 1-to_optim[[grep(sprintf("v_%d", i), names(to_optim))]],
               sd_v2   = to_optim[["sd"]])
     }
     spar = par[!grepl("[12]$", names(par))]
@@ -88,19 +67,19 @@ negloglik.behavioral <- function(to_optim,
     # set common sd's
     dist_par$sd_v = c(dist_par$sd_v, dist_par$sd_v)
 
-    if (!is.null(wr)){
+    if ("beta" %in% names(to_optim)){
       # compute netinputs based on the fed in learning rate, and use this as drift rates
       dist_par$mean_v = netinputs(beta = to_optim[[grep("beta", names(to_optim))]],
-                                  wr   = wr)
+                                  dataset = dataset)
     }
 
     # get summed log-likelihood
-    if (length(conditions) == 1){
-      react = list(rt)
-      resp  = list(response)
+    if (length(unique(dataset$repetition)) == 1){
+      react = list(dataset$rt)
+      resp  = list(dataset$response)
     } else{
-      react = list(rt[conditions == i])
-      resp  = list(response[conditions == i])
+      react = list(dataset$rt[dataset$repetition == i])
+      resp  = list(dataset$response[dataset$repetition == i])
     }
     d = do.call(dLBA, args = c(rt           = react,
                                response     = resp,

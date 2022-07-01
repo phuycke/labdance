@@ -4,32 +4,12 @@
 \alias{negloglik.behavioral}
 \title{negloglik.behavioral}
 \usage{
-negloglik.behavioral(to_optim, rt, response, conditions = NULL, wr = NULL)
+negloglik.behavioral(to_optim, dataset)
 }
 \arguments{
 \item{to_optim}{The likelihood for parameter set to_optim is calculated.}
 
-\item{rt}{Trial-by-trial reaction times used for maximum likelihood
-estimation. Combined with choice data when finding the most likely parameter
-set.}
-
-\item{response}{Trial-by-trial choice data used for maximum likelihood
-estimation. Combined with RT data when finding the most likely parameter
-set.}
-
-\item{conditions}{Optional: only needed in non dynamic models.
-Indicates the different conditions. For instance, when one
-has a fast and a slow condition, this vector could indicate whether a
-certain trial is fast (1) or slow (2). Different drift rates are then
-estimated for each condition, and which trials are used in the estimation
-process is determined by conditions.}
-
-\item{wr}{Optional: only needed in dynamic models.
-Represents the weight resets that take place in our dynamic model.
-This vector is a vector consisting of N binary values (0, 1), indicating
-whether a weight reset at trial N has taken place. Hence, if a weight reset
-takes place at trial 8, the first 8 elements of wr consist of 7 0's
-followed by a single 1.}
+\item{dataset}{Bla bla}
 }
 \value{
 numeric value indicating the likelihood of a parameter set given
