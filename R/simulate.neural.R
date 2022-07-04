@@ -53,22 +53,18 @@ simulate.neural <- function(sub_id    = 1,
 
   # checking for faulty input
   stopifnot(exprs = {
-    !all(is.null(c(sub_id, n_blocks, true_pars, sigma_gen, dataset)))
-    all(is.numeric(c(sub_id, n_blocks, sigma_gen)))
-    (class(dataset) %in% c("NULL", "data.frame"))
-    length(grep("v_", names(true_pars))) > 0
-    length(names(true_pars)) == length(unique(names(true_pars)))
-    all(c("a", "b", "t0", "sd") %in% names(true_pars))
-    (sub_id > 0)
-    (sigma_gen > 0 & sigma_gen < 100)
+    class(sub_id) %in% c("numeric", "integer")
+    !(sub_id < 1 | n_blocks < 1)
+    class(n_blocks) %in% c("numeric", "integer")
+    xor(is.null(true_pars), is.null(dataset))
+    length(true_pars) > 0
+    !is.null(names(true_pars))
+    !("beta" %in% names(true_pars))
+    (sigma_gen > 0 & sigma_gen < 1000)
   })
   if (!is.null(dataset)){
-    stopifnot(exprs = {
-      is.data.frame(dataset)
-      all(c("stim", "repetition") %in% colnames(dataset))
-    })
-  } else{
-    stopifnot(n_blocks > 0)
+    stopifnot(all(c("stim", "repetition", "block_nr") %in% colnames(dataset)))
+    nrow(dataset > 0)
   }
 
   # placeholder for later
