@@ -8,36 +8,9 @@
 #'     neural data is passed when only this type of data is provided.
 #'
 #' @param to_optim The likelihood for parameter set to_optim is calculated.
-#' @param rt Trial-by-trial reaction times used for behavioral likelihood
-#'     estimation. Combined with choice data when finding the most likely parameter
-#'     set.
-#' @param response Trial-by-trial choice data used for behavioral likelihood
-#'     estimation. Combined with RT data when finding the most likely parameter
-#'     set.
-#' @param neural_data Optional: only needed in neural models.
-#'     The neural data used for neural likelihood. This neural data could represent
-#'     anything: average spectral power, coherence, amplitudes ... There is only
-#'     one major constraint: there has to be some kind of relationship between the
-#'     inputted neural data and one (or multiple) LBA model parameter(s). In our
-#'     case, we assume that a positive correlation exists between EEG alpha power
-#'     (8 - 12 Hz) and the LBA drift rate (see Huycke et al. 2021 EJN).
-#' @param conditions Optional: only needed in non dynamic models.
-#'     Indicates the different conditions. For instance, when one
-#'     has a fast and a slow condition, this vector could indicate whether a
-#'     certain trial is fast (1) or slow (2). Different drift rates are then
-#'     estimated for each condition, and which trials are used in the estimation
-#'     process is determined by conditions.
-#' @param wr Optional: only needed in dynamic models.
-#'     Represents the weight resets that take place in our dynamic model.
-#'     This vector is a vector consisting of N binary values (0, 1), indicating
-#'     whether a weight reset at trial N has taken place. Hence, if a weight reset
-#'     takes place at trial 8, the first 8 elements of wr consist of 7 0's
-#'     followed by a single 1.
-#' @param netinput Optional: only needed in dynamic models.
-#'     Represents the activation at the output level of a dynamic model. Thus, when
-#'     your model has two output units, and it performs on N trials, then netinput
-#'     will have the form N x 2. This vector essentially represents the drift
-#'     rates on a trial-by-trial basis, and is hence only used in dynamic models.
+#' @param dataset Optional: only when empirical data is available.
+#'     This allows data to be generated relying on stimuli actually seen by
+#'     subjects.
 #' @param sigma_mod Optional: only needed in dynamic models.
 #'     Neural data that is fed to the optimization algorithm has a certain
 #'     'generative' process of which the 'generative variance' is unknown. For
@@ -51,43 +24,52 @@
 #' @return numeric value indicating the likelihood of a parameter set given
 #'     the available behavioral and/or neural data.
 #' @examples
-#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
-#'                   n_drift  = 8,
-#'                   dynamic  = F)
-#' nLBA  = simulate.data(sub_id    = 1,
-#'                       n_blocks  = 16,
-#'                       true_pars = true,
-#'                       sigma_gen = 0.01)
+#' library(labdance)
 #'
-#' likelihood.summed(to_optim    = true,
-#'                   rt          = nLBA$rt,
-#'                   response    = nLBA$response,
-#'                   neural_data = nLBA$neural,
-#'                   conditions  = nLBA$repetition,
-#'                   sigma_mod   = 0.01)
-#' # [1] 1113.224
+#' # dynamic LBA
+#' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+#'                   n_drift  = NULL,
+#'                   dynamic  = T)
+#' simulated = simulate.data(true_pars = true,
+#'                           dataset   = NULL,
+#'                           sigma_gen = NULL)
+#' ll.s = likelihood.summed(to_optim = true,
+#'                          dataset  = simulated)
+#' ll.b = negloglik.behavioral(to_optim = true,
+#'                             dataset  = simulated)
+#' # summed LL should be equal to the behavioral LL
+#' stopifnot(ll.s == ll.b)
+#'
+#' # dynamic neural LBA
+#' simulated = simulate.data(true_pars = true,
+#'                           dataset   = NULL,
+#'                           sigma_gen = 0.01)
+#' ll.b = negloglik.behavioral(to_optim = true,
+#'                             dataset  = simulated)
+#' ll.n = likelihood.neural(to_optim = true,
+#'                          dataset  = simulated)
+#' ll.s = likelihood.summed(to_optim  = true,
+#'                          dataset   = simulated,
+#'                          sigma_mod = 0.01)
+#' # summed LL should be equal to the sum of behavioral LL and neural LL times a constant
+#' stopifnot(ll.s == (ll.b + (1/(2*(0.01)^2)) * ll.n))
 #'
 #' @export
 #' @import rtdists
 
 
 likelihood.summed <- function(to_optim,
-                              rt,
-                              response,
-                              neural_data = NULL,
-                              conditions  = NULL,
-                              wr          = NULL,
-                              netinput    = NULL,
-                              sigma_mod   = NULL){
+                              dataset   = NULL,
+                              sigma_mod = NULL){
 
-  ll.behavioral = negloglik.behavioral(to_optim, rt, response, conditions, wr)
+  ll.behavioral = negloglik.behavioral(to_optim, dataset)
 
   # for non neural data, only return the behavioral loglikelihood
-  if (is.null(neural_data)){
+  if (is.null(dataset$neural)){
     return(ll.behavioral)
   } else{
     # for neural data, return the sum of both
-    ll.neural = likelihood.neural(to_optim, neural_data, conditions, netinput)
+    ll.neural = likelihood.neural(to_optim, dataset)
     return(ll.behavioral + (1/(2*(sigma_mod)^2)) * ll.neural)
   }
 }

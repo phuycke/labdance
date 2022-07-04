@@ -4,31 +4,14 @@
 \alias{likelihood.neural}
 \title{likelihood.neural}
 \usage{
-likelihood.neural(to_optim, neural_data, conditions = NULL, netinput = NULL)
+likelihood.neural(to_optim, dataset)
 }
 \arguments{
 \item{to_optim}{The likelihood for parameter set to_optim is calculated.}
 
-\item{neural_data}{The neural data used for neural likelihood. This neural data
-could represent anything: average spectral power, coherence, amplitudes ...
-There is only one major constraint: there has to be some kind of relationship
-between the inputted neural data and one (or multiple) LBA model parameter(s).
-In our case, we assume that a positive correlation exists between EEG alpha
-power (8 - 12 Hz) and the LBA drift rate.}
-
-\item{conditions}{Optional: only needed in non dynamic models.
-Indicates the different conditions. For instance, when one
-has a fast and a slow condition, this vector could indicate whether a
-certain trial is fast (1) or slow (2). Different drift rates are then
-estimated for each condition, and which trials are used in the estimation
-process is determined by conditions.}
-
-\item{netinput}{Optional: only needed in dynamic models.
-Represents the activation at the output level of a dynamic model.
-Thus, when your model has two output units, and it performs on N trials,
-then netinput will have the form N x 2. This vector essentially represents
-the drift rates on a trial-by-trial basis, and is hence only used in
-dynamic models.}
+\item{dataset}{Optional: only when empirical data is available.
+This allows data to be generated relying on stimuli actually seen by
+subjects.}
 }
 \value{
 numeric value indicating the likelihood of a parameter set given
@@ -39,17 +22,29 @@ Helper function: called when "likelihood.summed" is called.
     Calculates the likelihood given passed (neural) data.
 }
 \examples{
-true = param_draw(base_par = c("a", "b", "t0", "sd"),
+library(labdance)
+
+# neural LBA
+true = param.draw(base_par = c("a", "b", "t0", "sd"),
                   n_drift  = 8,
                   dynamic  = F)
-nLBA  = simulate.data(sub_id   = 1,
-                      n_blocks  = 16,
-                      true_pars = true,
-                      sigma_gen = 0.01)
+dataset = simulate.data(true_pars = true,
+                        dataset   = NULL,
+                        sigma_gen = 0.01)
+likelihood.neural(to_optim = true,
+                  dataset  = dataset)
+# [1] 0.05077954
 
-likelihood.neural(to_optim    = true,
-                  neural_data = nLBA$neural,
-                  conditions  = nLBA$repetition)
-# [1] 0.04885457
+
+# dynamic neural LBA
+true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                  n_drift  = NULL,
+                  dynamic  = T)
+dataset = simulate.data(true_pars = true,
+                        dataset   = NULL,
+                        sigma_gen = 0.01)
+likelihood.neural(to_optim = true,
+                  dataset  = dataset)
+# [1] 0.04793889
 
 }

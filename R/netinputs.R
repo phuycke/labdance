@@ -43,7 +43,7 @@
 #' @import rtdists
 
 
-netinputs <- function(beta = 0.5,
+netinputs <- function(beta    = 0.5,
                       dataset = NULL){
 
   stim = diag(4)

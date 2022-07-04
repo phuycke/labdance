@@ -4,28 +4,44 @@
 #'     (i.e. reaction times and choice) data
 #'
 #' @param to_optim The likelihood for parameter set to_optim is calculated.
-#' @param dataset Bla bla
+#' @param dataset Optional: only when empirical data is available.
+#'     This allows data to be generated relying on stimuli actually seen by
+#'     subjects.
 #'
 #' @return numeric value indicating the likelihood of a parameter set given
 #'     the available behavioral data.
 #' @examples
-#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
+#' # get parameters, simulate data and calculate likelihood
+#' true = param.draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = F)
-#' LBA  = simulate.data(1, 16, true)
+#' simulated = simulate.data(true_pars = true,
+#'                           dataset   = NULL)
+#' ll.true = negloglik.behavioral(to_optim = true,
+#'                                dataset  = simulated)
 #'
-#' negloglik.behavioral(to_optim   = true,
-#'                      rt         = LBA$rt,
-#'                      response   = LBA$response,
-#'                      conditions = LBA$repetition)
-#' # [1] -423.1392
+#' # calculate likelihood for another parameter set
+#' test = param.draw(base_par = c("a", "b", "t0", "sd"),
+#'                   n_drift  = 8,
+#'                   dynamic  = F)
+#' ll.test = negloglik.behavioral(to_optim = test,
+#'                                dataset  = simulated)
+#'
+#' # check that likelihood is lowest for the true parameter set
+#' sprintf("Negative loglikelihood for true parameters: %.02f", ll.true)
+#' # [1] "Negative loglikelihood for true parameters: 792.53"
+#'
+#' sprintf("Negative loglikelihood for other parameters: %.02f", ll.test)
+#' # [1] "Negative loglikelihood for other parameters: 3839.52"
+#'
+#'
 #'
 #' @export
 #' @import rtdists
 
 
 negloglik.behavioral <- function(to_optim,
-                                 dataset){
+                                 dataset = NULL){
 
   # at least one of the two must be NULL
   if (is.null(dataset$repetition)){
