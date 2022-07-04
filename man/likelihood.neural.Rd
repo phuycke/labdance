@@ -4,7 +4,7 @@
 \alias{likelihood.neural}
 \title{likelihood.neural}
 \usage{
-likelihood.neural(to_optim, dataset)
+likelihood.neural(to_optim, dataset = NULL)
 }
 \arguments{
 \item{to_optim}{The likelihood for parameter set to_optim is calculated.}
@@ -22,7 +22,9 @@ Helper function: called when "likelihood.summed" is called.
     Calculates the likelihood given passed (neural) data.
 }
 \examples{
-library(labdance)
+require(labdance)
+
+set.seed(2022)
 
 # neural LBA
 true = param.draw(base_par = c("a", "b", "t0", "sd"),
@@ -33,8 +35,7 @@ dataset = simulate.data(true_pars = true,
                         sigma_gen = 0.01)
 likelihood.neural(to_optim = true,
                   dataset  = dataset)
-# [1] 0.05077954
-
+# [1] 0.04932333
 
 # dynamic neural LBA
 true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -45,6 +46,6 @@ dataset = simulate.data(true_pars = true,
                         sigma_gen = 0.01)
 likelihood.neural(to_optim = true,
                   dataset  = dataset)
-# [1] 0.04793889
+# [1] 0.05276045
 
 }

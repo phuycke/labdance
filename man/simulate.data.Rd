@@ -40,6 +40,8 @@ Function that makes calls to simulate.dynamic() or
 \examples{
 require(labdance)
 
+set.seed(2022)
+
 # load prepared empirical data
 load("data/sub-02 - simulate.neural.RData")
 
@@ -56,11 +58,11 @@ simulated = simulate.data(true_pars = true,
 head(simulated)
 
 #   sub_id stim repetition block_nr       rt response    neural
-# 1      1    1          1        1 2.218504        2 0.2872945
-# 2      1    1          2        1 3.002954        2 0.3563756
-# 3      1    3          1        1 2.005866        2 0.3056450
-# 4      1    4          1        1 2.868882        2 0.2967507
-# 5      1    2          1        1 1.503713        2 0.2952629
-# 6      1    3          2        1 2.535639        2 0.3499139
+# 1      1    1          1        1 2.076967        1 0.3554553
+# 2      1    1          2        1 1.898463        2 0.3688368
+# 3      1    3          1        1 1.274176        2 0.3277951
+# 4      1    4          1        1 1.335997        2 0.3238378
+# 5      1    2          1        1 1.757728        2 0.3281104
+# 6      1    3          2        1 1.572040        2 0.3861202
 
 }

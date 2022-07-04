@@ -4,21 +4,18 @@
 \alias{recovery}
 \title{recovery}
 \usage{
-recovery(base_par, df, cycles = 500, sigma_gen = NULL, sigma_mod = NULL)
+recovery(base_par, dataset = NULL, cycles = 500, sigma_mod = NULL)
 }
 \arguments{
 \item{base_par}{The parameters that need to be optimized. For instance, when
 all parameters in the dynamic neural LBA need to be optimized, c("a", "b",
 "t0", "sd") would need to be passed to base_par.}
 
-\item{df}{The dataset containing the data used in optimization. Contains either
+\item{dataset}{The dataset containing the data used in optimization. Contains either
 behavioral data (reaction times, choice), neural data or both.}
 
 \item{cycles}{The amount of 'tries' that the optimization method has. More
 precisely, recovery will attempt MLE for a total of cycles tries.}
-
-\item{sigma_gen}{Optional: only needed in neural models.
-The variance in the generation of the true neural data.}
 
 \item{sigma_mod}{Optional: only needed in neural models.
 The assumed variance of the generation of the neural data, since the
@@ -34,19 +31,42 @@ Optimization function that attempts to find the parameter set that
    a box constraints approach ("L-BFGS-B" algorithm (Byrd et al., 1995)).
 }
 \examples{
-true      = param_draw(dynamic = T)
+require(labdance)
+
+set.seed(2022)
+
+# dynamic LBA
+true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                  n_drift  = NULL,
+                  dynamic  = T)
 simulated = simulate.data(true_pars = true,
+                          dataset   = NULL)
+\dontrun{
+  recovered = recovery(base_par = c("a", "b", "t0", "sd", "beta"),
+                       dataset  = simulated)
+}
+print(rbind(true, recovered[1:length(true)]))
+
+#              a        b        t0        sd      beta
+# true 0.6119832 1.235444 0.3101643 0.2719001 0.1847300
+#      0.6795545 1.272554 0.3556901 0.2720122 0.2504881
+
+# neural LBA
+true = param.draw(base_par = c("a", "b", "t0", "sd"),
+                  n_drift  = 8,
+                  dynamic  = F)
+simulated = simulate.data(true_pars = true,
+                          dataset   = NULL,
                           sigma_gen = 0.01)
+\dontrun{
+  recovered = recovery(base_par  = c("a", "b", "t0", "sd"),
+                      dataset   = simulated,
+                       sigma_mod = 0.01)
+}
+print(rbind(true, recovered[1:length(true)]))
 
-recov = recovery(base_par  = c("a", "b", "t0", "sd", "beta"),
-                 df        = simulated,
-                 cycles    = 500,
-                 sigma_mod = 0.01)
-
-print(rbind(true, recov[1:(length(recov)-2)]))
-
-#             a        b        t0        sd      beta
-# true 0.1282006 1.121690 0.4681826 0.3257557 0.6642583
-#      0.3477806 1.200789 0.5587487 0.3394791 0.6684803
+#              a        b        t0        sd       v_1       v_2       v_3       v_4       v_5       v_6       v_7       v_8
+# true 0.1458743 1.010073 0.4683325 0.3838641 0.2961068 0.4284725 0.4670166 0.5195746 0.5799875 0.6024224 0.6095980 0.6688995
+#      0.6087317 1.185651 0.5912251 0.3862249 0.2979105 0.4301181 0.4662076 0.5202188 0.5790622 0.6046539 0.6074382 0.6683207
 
 }

@@ -4,7 +4,7 @@
 \alias{likelihood.summed}
 \title{likelihood.summed}
 \usage{
-likelihood.summed(to_optim, dataset, sigma_mod = NULL)
+likelihood.summed(to_optim, dataset = NULL, sigma_mod = NULL)
 }
 \arguments{
 \item{to_optim}{The likelihood for parameter set to_optim is calculated.}
@@ -36,7 +36,7 @@ Returns sum of likelihoods based on passed data. Note that
     neural data is passed when only this type of data is provided.
 }
 \examples{
-library(labdance)
+require(labdance)
 
 # dynamic LBA
 true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -47,7 +47,7 @@ simulated = simulate.data(true_pars = true,
                           sigma_gen = NULL)
 ll.s = likelihood.summed(to_optim = true,
                          dataset  = simulated)
-ll.b = negloglik.behavioral(to_optim = true,
+ll.b = likelihood.behavioral(to_optim = true,
                             dataset  = simulated)
 # summed LL should be equal to the behavioral LL
 stopifnot(ll.s == ll.b)
@@ -56,7 +56,7 @@ stopifnot(ll.s == ll.b)
 simulated = simulate.data(true_pars = true,
                           dataset   = NULL,
                           sigma_gen = 0.01)
-ll.b = negloglik.behavioral(to_optim = true,
+ll.b = likelihood.behavioral(to_optim = true,
                             dataset  = simulated)
 ll.n = likelihood.neural(to_optim = true,
                          dataset  = simulated)

@@ -17,12 +17,16 @@
 #'
 #' @return numeric containing named values
 #' @examples
-#' param_draw(base_par = c("a", "b", "t0", "sd"),
+#' require(labdance)
+#'
+#' set.seed(2022)
+#'
+#' param.draw(base_par = c("a", "b", "t0", "sd"),
 #'            n_drift  = NULL,
 #'            dynamic  = T)
+#' #         a         b        t0        sd
+#' # 0.6119832 1.2354445 0.3101643 0.2719001
 #'
-#' #         a         b        t0        sd      beta
-#' # 0.7141265 0.7890872 0.7401094 0.4863153 0.4374287
 #' @export
 #' @import rtdists
 
@@ -36,7 +40,7 @@ param.draw <- function(base_par = c("a", "b", "t0", "sd"),
     all(is.character(base_par))
     length(base_par) > 0
     length(base_par) == length(unique(base_par))
-    (class(n_drift) %in% c("numeric", "NULL"))
+    (class(n_drift) %in% c("numeric", "NULL", "integer"))
     is.logical(dynamic)
     ((is.null(n_drift) & isTRUE(dynamic)) |
         (!is.null(n_drift) & isFALSE(dynamic)))

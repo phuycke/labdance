@@ -29,10 +29,14 @@ numeric containing named values
 Generates (d)(n)LBA parameters within a reasonable range.
 }
 \examples{
-param_draw(base_par = c("a", "b", "t0", "sd"),
+require(labdance)
+
+set.seed(2022)
+
+param.draw(base_par = c("a", "b", "t0", "sd"),
            n_drift  = NULL,
            dynamic  = T)
+#         a         b        t0        sd
+# 0.6119832 1.2354445 0.3101643 0.2719001
 
-#         a         b        t0        sd      beta
-# 0.7141265 0.7890872 0.7401094 0.4863153 0.4374287
 }

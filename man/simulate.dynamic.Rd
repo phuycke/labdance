@@ -29,6 +29,8 @@ Helper function called by simulate.data() whenever data from
 \examples{
 require(labdance)
 
+set.seed(2022)
+
 # load prepared empirical data
 load("data/sub-02 - simulate.dynamic.RData")
 
@@ -43,11 +45,11 @@ simulated = simulate.dynamic(true_pars = true,
 head(simulated)
 
 #   stim target condition       rt response   mean_v1   mean_v2
-# 1    1      1     novel 1.288473        1 0.5000000 0.5000000
-# 2    1      1     novel 2.598099        1 0.6120281 0.3879719
-# 3    3      2     novel 1.772595        1 0.5000000 0.5000000
-# 4    4      2     novel 2.151232        2 0.5000000 0.5000000
-# 5    2      1     novel 3.077246        2 0.5000000 0.5000000
-# 6    3      2     novel 2.072611        2 0.3879719 0.6120281
+# 1    1      1     novel 1.807239        2 0.5000000 0.5000000
+# 2    1      1     novel 4.307053        2 0.5280923 0.4719077
+# 3    3      2     novel 1.107353        1 0.5000000 0.5000000
+# 4    4      2     novel 3.858292        1 0.5000000 0.5000000
+# 5    2      1     novel 1.873553        2 0.5000000 0.5000000
+# 6    3      2     novel 2.170866        2 0.4719077 0.5280923
 
 }

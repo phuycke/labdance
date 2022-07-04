@@ -11,7 +11,9 @@
 #' @return numeric value indicating the likelihood of a parameter set given
 #'     the neural (or model output) data.
 #' @examples
-#' library(labdance)
+#' require(labdance)
+#'
+#' set.seed(2022)
 #'
 #' # neural LBA
 #' true = param.draw(base_par = c("a", "b", "t0", "sd"),
@@ -22,8 +24,7 @@
 #'                         sigma_gen = 0.01)
 #' likelihood.neural(to_optim = true,
 #'                   dataset  = dataset)
-#' # [1] 0.05077954
-#'
+#' # [1] 0.04932333
 #'
 #' # dynamic neural LBA
 #' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -34,7 +35,7 @@
 #'                         sigma_gen = 0.01)
 #' likelihood.neural(to_optim = true,
 #'                   dataset  = dataset)
-#' # [1] 0.04793889
+#' # [1] 0.05276045
 #'
 #' @export
 #' @import rtdists

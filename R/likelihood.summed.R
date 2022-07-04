@@ -24,7 +24,7 @@
 #' @return numeric value indicating the likelihood of a parameter set given
 #'     the available behavioral and/or neural data.
 #' @examples
-#' library(labdance)
+#' require(labdance)
 #'
 #' # dynamic LBA
 #' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -35,7 +35,7 @@
 #'                           sigma_gen = NULL)
 #' ll.s = likelihood.summed(to_optim = true,
 #'                          dataset  = simulated)
-#' ll.b = negloglik.behavioral(to_optim = true,
+#' ll.b = likelihood.behavioral(to_optim = true,
 #'                             dataset  = simulated)
 #' # summed LL should be equal to the behavioral LL
 #' stopifnot(ll.s == ll.b)
@@ -44,7 +44,7 @@
 #' simulated = simulate.data(true_pars = true,
 #'                           dataset   = NULL,
 #'                           sigma_gen = 0.01)
-#' ll.b = negloglik.behavioral(to_optim = true,
+#' ll.b = likelihood.behavioral(to_optim = true,
 #'                             dataset  = simulated)
 #' ll.n = likelihood.neural(to_optim = true,
 #'                          dataset  = simulated)
@@ -62,7 +62,7 @@ likelihood.summed <- function(to_optim,
                               dataset   = NULL,
                               sigma_mod = NULL){
 
-  ll.behavioral = negloglik.behavioral(to_optim, dataset)
+  ll.behavioral = likelihood.behavioral(to_optim, dataset)
 
   # for non neural data, only return the behavioral loglikelihood
   if (is.null(dataset$neural)){
