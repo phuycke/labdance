@@ -28,7 +28,7 @@ test_that("param.draw handles faulty input correctly", {
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
   d_copy = d
-  d_copy$repetition = NULL
+  d_copy$condition = NULL
   expect_error(simulate.dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
