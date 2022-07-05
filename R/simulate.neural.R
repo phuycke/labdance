@@ -60,11 +60,18 @@ simulate.neural <- function(sub_id    = 1,
     length(true_pars) > 0
     !is.null(names(true_pars))
     !("beta" %in% names(true_pars))
-    (sigma_gen > 0 & sigma_gen < 1000)
   })
+  if (!is.null(sigma_gen)){
+    stopifnot(exprs = {
+      class(sigma_gen) %in% c("numeric", "integer")
+      (sigma_gen > 0 & sigma_gen < 1000)
+    })
+  }
   if (!is.null(dataset)){
-    stopifnot(all(c("stim", "repetition", "block_nr") %in% colnames(dataset)))
-    nrow(dataset > 0)
+    stopifnot(exprs = {
+      all(c("stim", "repetition", "block_nr") %in% colnames(dataset))
+      nrow(dataset > 0)
+    })
   }
 
   # placeholder for later

@@ -49,6 +49,28 @@ simulate.dynamic <- function(n_blocks  = 16,
                              sigma_gen = NULL,
                              dataset   = NULL){
 
+  # checking for faulty input
+  stopifnot(exprs = {
+    n_blocks > 0
+    class(n_blocks) %in% c("numeric", "integer")
+    xor(is.null(true_pars), is.null(dataset))
+    length(true_pars) > 0
+    !is.null(names(true_pars))
+    ("beta" %in% names(true_pars))
+  })
+  if (!is.null(sigma_gen)){
+    stopifnot(exprs = {
+      class(sigma_gen) %in% c("numeric", "integer")
+      (sigma_gen > 0 & sigma_gen < 1000)
+    })
+  }
+  if (!is.null(dataset)){
+    stopifnot(exprs = {
+      all(c("stim", "condition") %in% colnames(dataset))
+      nrow(dataset > 0)
+    })
+  }
+
   # four stimuli and their targets
   stim = diag(4)
   t  = matrix(c(1, 1, 0, 0, 0, 0, 1, 1), nrow = 4)

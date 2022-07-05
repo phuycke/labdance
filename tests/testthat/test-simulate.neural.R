@@ -20,9 +20,6 @@ test_that("param.draw handles faulty input correctly", {
   expect_error(simulate.neural(true_pars = true,
                                sigma_gen = -6,
                                dataset   = NULL))
-  expect_error(simulate.neural(true_pars = NULL,
-                               sigma_gen = 0.01,
-                               dataset   = NULL))
   expect_error(simulate.neural(true_pars = seq(.1, .4, .1),
                                sigma_gen = 0.01,
                                dataset   = NULL))
@@ -51,5 +48,32 @@ test_that("param.draw handles faulty input correctly", {
   expect_error(simulate.neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = NULL))
+})
+
+# test whether the output we get is expected
+test_that("the output we get is expected", {
+  # without neural data
+  n_blocks = 12
+  d = simulate.neural(n_blocks  = n_blocks,
+                      true_pars = param.draw(n_drift = 8,
+                                             dynamic = F),
+                      sigma_gen = NULL)
+  expect_equal(nrow(d), n_blocks * 32)
+  expect_equal(ncol(d), 6)
+  expect_false("neural" %in% names(d))
+  # with neural data
+  d = simulate.neural(true_pars = param.draw(n_drift = 8,
+                                             dynamic = F),
+                      sigma_gen = 0.01)
+  expect_equal(nrow(d), 512)
+  expect_equal(ncol(d), 7)
+  expect_true("neural" %in% names(d))
+  # check the output of the simulated data
+  expect_true(all(unique(d$stim) == 1:4))
+  expect_true(all(unique(d$repetition) == 1:8))
+  expect_true(all(unique(d$response) %in% 1:2))
+  expect_true(all(d$block_nr[seq(1, 512, 32)] == 1:16))
+  expect_true(all(d$rt > 0))
+  expect_length(unique(d$sub_id), 1)
 })
 
