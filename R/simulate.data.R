@@ -14,7 +14,7 @@
 #' @param dataset Optional: only when empirical data is available.
 #'     This allows data to be generated relying on stimuli actually seen by
 #'     subjects.
-#'
+#' @usage simulate.data(true_pars = true, sigma_gen = 0.01, dataset = d)
 #' @return data.frame containing simulated behavioral and/or neural data
 #'     depending on the underlying model.
 #' @examples

@@ -13,7 +13,7 @@
 #'     Replaces the stimuli and repetitions by information observed in the data. Hence,
 #'     this allows data to be generated relying on stimuli actually seen by
 #'     subjects.
-#'
+#' @usage simulate.neural(true_pars = true, sigma_gen = 0.01, dataset = d)
 #' @return data.frame containing behavioral and neural data.
 #' @examples
 #' require(labdance)
@@ -44,6 +44,7 @@
 #'
 #' @export simulate.neural
 #' @import rtdists
+#' @import stats
 
 simulate.neural <- function(sub_id    = 1,
                             n_blocks  = 16,

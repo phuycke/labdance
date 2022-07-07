@@ -4,7 +4,7 @@
 \alias{simulate.dynamic}
 \title{simulate.dynamic}
 \usage{
-\method{simulate}{dynamic}(n_blocks = 16, true_pars = NULL, sigma_gen = NULL, dataset = NULL)
+simulate.dynamic(true_pars = true, n_blocks  = 16, dataset = d)
 }
 \arguments{
 \item{n_blocks}{Determines the number of experimental blocks within a dataset.}

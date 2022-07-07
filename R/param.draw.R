@@ -30,6 +30,7 @@
 #'
 #' @export param.draw
 #' @import rtdists
+#' @import stats
 
 
 param.draw <- function(base_par = c("a", "b", "t0", "sd"),

@@ -57,6 +57,7 @@
 #'
 #' @export recovery
 #' @import rtdists
+#' @import stats
 
 
 recovery <- function(base_par,

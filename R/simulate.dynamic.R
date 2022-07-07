@@ -11,7 +11,7 @@
 #'     Replaces the stimuli and conditions by information observed in the data. Hence,
 #'     this allows data to be generated relying on stimuli actually seen by
 #'     subjects.
-#'
+#' @usage simulate.dynamic(true_pars = true, n_blocks  = 16, dataset = d)
 #' @return data.frame containing behavioral and/or neural data.
 #' @examples
 #' require(labdance)
@@ -41,6 +41,7 @@
 #'
 #' @export simulate.dynamic
 #' @import rtdists
+#' @import stats
 
 
 # simulate RW data, reset W to 0 based every 32 trials

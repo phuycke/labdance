@@ -4,13 +4,7 @@
 \alias{simulate.data}
 \title{simulate.data}
 \usage{
-\method{simulate}{data}(
-  sub_id = 1,
-  n_blocks = 16,
-  true_pars = NULL,
-  sigma_gen = NULL,
-  dataset = NULL
-)
+simulate.data(true_pars = true, sigma_gen = 0.01, dataset = d)
 }
 \arguments{
 \item{sub_id}{Optional: only for neural models.
