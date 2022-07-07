@@ -45,6 +45,22 @@
 likelihood.behavioral <- function(to_optim,
                                   dataset = NULL){
 
+  # handle bad input
+  stopifnot(exprs = {
+    (!is.null(names(to_optim)))
+    all(c("a", "b", "t0", "sd") %in% names(to_optim))
+  })
+  if (!is.null(dataset)){
+    stopifnot(exprs = {
+      (!is.null(names(dataset)))
+      nrow(dataset) > 0
+      all(c("rt", "response") %in% names(dataset))
+      class(dataset$response) %in% c("numeric", "integer")
+      min(dataset$response) == 1
+      sort(unique(dataset$choice)) == 1:length(unique(dataset$choice))
+    })
+  }
+
   # at least one of the two must be NULL
   if (is.null(dataset$repetition)){
     dataset$repetition = 1

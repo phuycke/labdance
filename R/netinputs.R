@@ -46,6 +46,20 @@
 netinputs <- function(beta    = 0.5,
                       dataset = NULL){
 
+  # stop if the input is not correct
+  stopifnot(exprs = {
+    (class(beta) %in% c("numeric", "integer"))
+    (beta > 0 & beta < 10)
+  })
+  if (!is.null(dataset)){
+    stopifnot(exprs = {
+      (!is.null(names(dataset)))
+      nrow(dataset) > 0
+      all(c("stim", "condition") %in% names(dataset))
+      !(c("neural" %in% names(dataset)))
+      })
+  }
+
   stim = diag(4)
   t    = matrix(c(1, 1, 0, 0, 0, 0, 1, 1),
                 nrow = 4)
