@@ -38,8 +38,7 @@ Suggests:
     purrr,
     lattice,
     latticeExtra,
-    binom,
-    RWiener
+    binom
 VignetteBuilder:
     knitr
 Encoding: UTF-8

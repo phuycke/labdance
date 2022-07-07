@@ -37,12 +37,26 @@
 #'                   dataset  = dataset)
 #' # [1] 0.05276045
 #'
-#' @export
+#' @export likelihood.neural
 #' @import rtdists
 
 
 likelihood.neural <- function(to_optim,
                               dataset = NULL){
+
+  # test for faulty input
+  # handle bad input
+  stopifnot(exprs = {
+    (!is.null(names(to_optim)))
+    all(c("a", "b", "t0", "sd") %in% names(to_optim))
+  })
+  if (!is.null(dataset)){
+    stopifnot(exprs = {
+      (!is.null(names(to_optim)))
+      xor("repetition" %in% names(dataset), "mean_v1" %in% names(dataset))
+      })
+  }
+  if (!is.null(dataset$mean_v1)) stopifnot((!is.null(dataset$neural)))
 
   # neural LBA
   if ("repetition" %in% names(dataset)){

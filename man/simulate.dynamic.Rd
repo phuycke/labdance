@@ -32,7 +32,7 @@ require(labdance)
 set.seed(2022)
 
 # load prepared empirical data
-load("data/sub-02 - simulate.dynamic.RData")
+load("data/simulate.dynamic.RData")
 
 # get dLBA parameters
 true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),

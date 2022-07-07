@@ -19,7 +19,7 @@
 #' require(labdance)
 #'
 #' # load prepared empirical data
-#' load("data/sub-02 - simulate.dynamic.RData")
+#' load("data/simulate.dynamic.RData")
 #'
 #' # simulate netinputs based on data and low beta
 #' ni = netinputs(beta = .2,
@@ -39,7 +39,7 @@
 #' # [1,] 0.2523346 0.2523346 0.7476654 0.7795135 0.804895 0.2204865
 #' # [2,] 0.7476654 0.7476654 0.2523346 0.2204865 0.195105 0.7795135
 #'
-#' @export
+#' @export netinputs
 #' @import rtdists
 
 
@@ -56,7 +56,6 @@ netinputs <- function(beta    = 0.5,
       (!is.null(names(dataset)))
       nrow(dataset) > 0
       all(c("stim", "condition") %in% names(dataset))
-      !(c("neural" %in% names(dataset)))
       })
   }
 

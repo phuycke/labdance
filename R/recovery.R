@@ -55,7 +55,7 @@
 #' # true 0.1458743 1.010073 0.4683325 0.3838641 0.2961068 0.4284725 0.4670166 0.5195746 0.5799875 0.6024224 0.6095980 0.6688995
 #' #      0.6087317 1.185651 0.5912251 0.3862249 0.2979105 0.4301181 0.4662076 0.5202188 0.5790622 0.6046539 0.6074382 0.6683207
 #'
-#' @export
+#' @export recovery
 #' @import rtdists
 
 
@@ -63,6 +63,13 @@ recovery <- function(base_par,
                      dataset   = NULL,
                      cycles    = 500,
                      sigma_mod = NULL){
+
+  stopifnot(exprs = {
+    class(cycles) %in% c("numeric", "integer")
+    cycles > 0
+    class(sigma_mod) %in% c("numeric", "integer")
+    sigma_mod > 0
+  })
 
   # determine the type of data
   if ("beta" %in% base_par){

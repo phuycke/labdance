@@ -54,7 +54,7 @@
 #' # summed LL should be equal to the sum of behavioral LL and neural LL times a constant
 #' stopifnot(ll.s == (ll.b + (1/(2*(0.01)^2)) * ll.n))
 #'
-#' @export
+#' @export likelihood.summed
 #' @import rtdists
 
 

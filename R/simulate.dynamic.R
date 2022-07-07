@@ -19,7 +19,7 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/sub-02 - simulate.dynamic.RData")
+#' load("data/simulate.dynamic.RData")
 #'
 #' # get dLBA parameters
 #' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -39,7 +39,7 @@
 #' # 5    2      1     novel 1.873553        2 0.5000000 0.5000000
 #' # 6    3      2     novel 2.170866        2 0.4719077 0.5280923
 #'
-#' @export
+#' @export simulate.dynamic
 #' @import rtdists
 
 

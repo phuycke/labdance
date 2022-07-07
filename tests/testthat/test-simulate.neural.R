@@ -1,6 +1,6 @@
 
 # test for bad input
-test_that("param.draw handles faulty input correctly", {
+test_that("faulty input is effectively handled", {
   # parameters that can be used to simulate data
   true = param.draw(base_par = c("a", "b", "t0", "sd"),
                     n_drift  = 8,
@@ -24,7 +24,7 @@ test_that("param.draw handles faulty input correctly", {
                                sigma_gen = 0.01,
                                dataset   = NULL))
   # tests with empirical data
-  load(file = system.file("data", "sub-02 - simulate.neural.RData",
+  load(file = system.file("data", "simulate.neural.RData",
                           package = "labdance"))
   d_copy = d
   d_copy$stim = NULL

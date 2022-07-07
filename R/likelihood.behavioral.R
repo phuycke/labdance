@@ -38,7 +38,7 @@
 #' # [1] "Negative loglikelihood for other parameters: 926.55"
 #'
 #'
-#' @export
+#' @export likelihood.behavioral
 #' @import rtdists
 
 

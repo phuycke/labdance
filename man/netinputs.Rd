@@ -30,7 +30,7 @@ Generates how the netinputs at the output level of a dynamic
 require(labdance)
 
 # load prepared empirical data
-load("data/sub-02 - simulate.dynamic.RData")
+load("data/simulate.dynamic.RData")
 
 # simulate netinputs based on data and low beta
 ni = netinputs(beta = .2,

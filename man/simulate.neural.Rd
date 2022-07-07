@@ -41,7 +41,7 @@ require(labdance)
 set.seed(2022)
 
 # load prepared empirical data
-load("data/sub-02 - simulate.neural.RData")
+load("data/simulate.neural.RData")
 
 # get LBA parameters (8 drift rates)
 true = param.draw(base_par = c("a", "b", "t0", "sd"),

@@ -23,7 +23,7 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/sub-02 - simulate.neural.RData")
+#' load("data/simulate.neural.RData")
 #'
 #' # get dLBA parameters
 #' true = param.draw(base_par = c("a", "b", "t0", "sd"),
@@ -45,7 +45,7 @@
 #' # 5      1    2          1        1 1.757728        2 0.3281104
 #' # 6      1    3          2        1 1.572040        2 0.3861202
 #'
-#' @export
+#' @export simulate.data
 #' @import rtdists
 
 

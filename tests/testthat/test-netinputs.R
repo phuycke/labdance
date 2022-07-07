@@ -1,13 +1,13 @@
 
 # test for bad input
-test_that("param.draw handles faulty input correctly", {
+test_that("faulty input is effectively handled", {
   # test beta
   expect_error(netinputs(beta = -.5))
   expect_error(netinputs(beta = "0.5"))
   expect_error(netinputs(beta = 100))
   expect_error(netinputs(beta = NULL))
   # tests with empirical data
-  load(file = system.file("data", "sub-02 - simulate.dynamic.RData",
+  load(file = system.file("data", "simulate.dynamic.RData",
                           package = "labdance"))
   d_copy = d
   d_copy$stim = NULL

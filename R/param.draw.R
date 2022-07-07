@@ -28,7 +28,7 @@
 #' #         a         b        t0        sd
 #' # 0.6119832 1.2354445 0.3101643 0.2719001
 #'
-#' @export
+#' @export param.draw
 #' @import rtdists
 
 
