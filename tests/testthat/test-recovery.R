@@ -12,5 +12,3 @@ test_that("the output of likelihood.summed is expected", {
                         cycles = 500,
                         sigma_mod = ".2"))
 })
-
-

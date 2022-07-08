@@ -36,10 +36,10 @@ require(labdance)
 set.seed(2022)
 
 # dynamic LBA
-true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                   n_drift  = NULL,
                   dynamic  = T)
-simulated = simulate.data(true_pars = true,
+simulated = simulate_data(true_pars = true,
                           dataset   = NULL)
 \dontrun{
   recovered = recovery(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -52,10 +52,10 @@ print(rbind(true, recovered[1:length(true)]))
 #      0.6795545 1.272554 0.3556901 0.2720122 0.2504881
 
 # neural LBA
-true = param.draw(base_par = c("a", "b", "t0", "sd"),
+true = param_draw(base_par = c("a", "b", "t0", "sd"),
                   n_drift  = 8,
                   dynamic  = F)
-simulated = simulate.data(true_pars = true,
+simulated = simulate_data(true_pars = true,
                           dataset   = NULL,
                           sigma_gen = 0.01)
 \dontrun{

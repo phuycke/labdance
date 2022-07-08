@@ -24,5 +24,3 @@ test_that("faulty input is effectively handled", {
                    dataset = d)
   expect_true(all(round(test[[1]] + test[[2]], 10) == 1))
 })
-
-

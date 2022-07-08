@@ -2,41 +2,41 @@
 # test for bad input
 test_that("faulty input is effectively handled", {
   # parameters that can be used to simulate data
-  true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+  true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                     n_drift  = NULL,
                     dynamic  = T)
   # test with simulated data
-  expect_error(simulate.dynamic(true_pars = NULL,
+  expect_error(simulate_dynamic(true_pars = NULL,
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
-  expect_error(simulate.dynamic(n_blocks  = -1,
+  expect_error(simulate_dynamic(n_blocks  = -1,
                                 true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
-  expect_error(simulate.dynamic(true_pars = true,
+  expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = -6,
                                 dataset   = NULL))
-  expect_error(simulate.dynamic(true_pars = seq(.1, .4, .1),
+  expect_error(simulate_dynamic(true_pars = seq(.1, .4, .1),
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
   # tests with empirical data
-  load(file = system.file("data", "simulate.dynamic.RData",
+  load(file = system.file("data", "simulate_dynamic.RData",
                           package = "labdance"))
   d_copy = d
   d_copy$stim = NULL
-  expect_error(simulate.dynamic(true_pars = true,
+  expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
   d_copy = d
   d_copy$condition = NULL
-  expect_error(simulate.dynamic(true_pars = true,
+  expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
   # test with dynamic parameters
-  true = param.draw(base_par = c("a", "b", "t0", "sd"),
+  true = param_draw(base_par = c("a", "b", "t0", "sd"),
                     n_drift  = 8,
                     dynamic  = F)
-  expect_error(simulate.dynamic(true_pars = true,
+  expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
 })
@@ -44,8 +44,8 @@ test_that("faulty input is effectively handled", {
 # test whether the output we get is expected
 test_that("the output we get is expected", {
   n_blocks = 12
-  d = simulate.dynamic(n_blocks  = n_blocks,
-                       true_pars = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+  d = simulate_dynamic(n_blocks  = n_blocks,
+                       true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                                               n_drift  = NULL,
                                               dynamic  = T),
                        sigma_gen = NULL)
@@ -53,7 +53,7 @@ test_that("the output we get is expected", {
   expect_equal(ncol(d), 7)
   expect_false("neural" %in% names(d))
   # with neural data
-  d = simulate.dynamic(true_pars = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+  d = simulate_dynamic(true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                                               n_drift  = NULL,
                                               dynamic  = T),
                        sigma_gen = 0.01)

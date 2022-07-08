@@ -2,34 +2,34 @@
 # test for bad input
 test_that("faulty input is effectively handled", {
   # tests with empirical data
-  load(file = system.file("data", "simulate.dynamic.RData",
+  load(file = system.file("data", "simulate_dynamic.RData",
                           package = "labdance"))
   d_copy = d
   d_copy$stim = NULL
-  expect_error(simulate.data(true_pars = true,
+  expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
   d_copy = d
   d_copy$repetition = NULL
-  expect_error(simulate.data(true_pars = true,
+  expect_error(simulate_data(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
   # tests with empirical data
-  load(file = system.file("data", "simulate.neural.RData",
+  load(file = system.file("data", "simulate_neural.RData",
                           package = "labdance"))
   d_copy = d
   d_copy$stim = NULL
-  expect_error(simulate.data(true_pars = true,
+  expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
   d_copy = d
   d_copy$repetition = NULL
-  expect_error(simulate.data(true_pars = true,
+  expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
   d_copy = d
   d_copy$block_nr = NULL
-  expect_error(simulate.data(true_pars = true,
+  expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
 })
@@ -37,22 +37,21 @@ test_that("faulty input is effectively handled", {
 # test whether the output we get is expected
 test_that("the output is the same as the functions it calls", {
   # dLBA: simulated data
-  true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+  true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                     n_drift  = NULL,
                     dynamic  = T)
-  d1 = simulate.dynamic(true_pars = true,
+  d1 = simulate_dynamic(true_pars = true,
                         sigma_gen = 0.01)
-  d2 = simulate.data(true_pars = true,
+  d2 = simulate_data(true_pars = true,
                      sigma_gen = 0.01)
   expect_identical(colnames(d1), colnames(d2))
   # nLBA: simulated data
-  true = param.draw(base_par = c("a", "b", "t0", "sd"),
+  true = param_draw(base_par = c("a", "b", "t0", "sd"),
                     n_drift  = 8,
                     dynamic  = F)
-  d1 = simulate.neural(true_pars = true,
+  d1 = simulate_neural(true_pars = true,
                        sigma_gen = 0.01)
-  d2 = simulate.data(true_pars = true,
+  d2 = simulate_data(true_pars = true,
                      sigma_gen = 0.01)
   expect_identical(colnames(d1), colnames(d2))
 })
-

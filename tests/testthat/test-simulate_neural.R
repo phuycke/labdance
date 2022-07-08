@@ -2,50 +2,50 @@
 # test for bad input
 test_that("faulty input is effectively handled", {
   # parameters that can be used to simulate data
-  true = param.draw(base_par = c("a", "b", "t0", "sd"),
+  true = param_draw(base_par = c("a", "b", "t0", "sd"),
                     n_drift  = 8,
                     dynamic  = F)
   # test with simulated data
-  expect_error(simulate.neural(true_pars = NULL,
+  expect_error(simulate_neural(true_pars = NULL,
                                sigma_gen = 0.01,
                                dataset   = NULL))
-  expect_error(simulate.neural(sub_id    = -1,
+  expect_error(simulate_neural(sub_id    = -1,
                                true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = NULL))
-  expect_error(simulate.neural(n_blocks  = -1,
+  expect_error(simulate_neural(n_blocks  = -1,
                                true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = NULL))
-  expect_error(simulate.neural(true_pars = true,
+  expect_error(simulate_neural(true_pars = true,
                                sigma_gen = -6,
                                dataset   = NULL))
-  expect_error(simulate.neural(true_pars = seq(.1, .4, .1),
+  expect_error(simulate_neural(true_pars = seq(.1, .4, .1),
                                sigma_gen = 0.01,
                                dataset   = NULL))
   # tests with empirical data
-  load(file = system.file("data", "simulate.neural.RData",
+  load(file = system.file("data", "simulate_neural.RData",
                           package = "labdance"))
   d_copy = d
   d_copy$stim = NULL
-  expect_error(simulate.neural(true_pars = true,
+  expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
   d_copy = d
   d_copy$repetition = NULL
-  expect_error(simulate.neural(true_pars = true,
+  expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
   d_copy = d
   d_copy$block_nr = NULL
-  expect_error(simulate.neural(true_pars = true,
+  expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
   # test with dynamic parameters
-  true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+  true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                     n_drift  = NULL,
                     dynamic  = T)
-  expect_error(simulate.neural(true_pars = true,
+  expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = NULL))
 })
@@ -54,15 +54,15 @@ test_that("faulty input is effectively handled", {
 test_that("the output we get is expected", {
   # without neural data
   n_blocks = 12
-  d = simulate.neural(n_blocks  = n_blocks,
-                      true_pars = param.draw(n_drift = 8,
+  d = simulate_neural(n_blocks  = n_blocks,
+                      true_pars = param_draw(n_drift = 8,
                                              dynamic = F),
                       sigma_gen = NULL)
   expect_equal(nrow(d), n_blocks * 32)
   expect_equal(ncol(d), 6)
   expect_false("neural" %in% names(d))
   # with neural data
-  d = simulate.neural(true_pars = param.draw(n_drift = 8,
+  d = simulate_neural(true_pars = param_draw(n_drift = 8,
                                              dynamic = F),
                       sigma_gen = 0.01)
   expect_equal(nrow(d), 512)
@@ -76,4 +76,3 @@ test_that("the output we get is expected", {
   expect_true(all(d$rt > 0))
   expect_length(unique(d$sub_id), 1)
 })
-
