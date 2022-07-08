@@ -42,11 +42,12 @@ set.seed(2022)
 
 # load prepared empirical data
 data("data_neural")
-
+data_neural$block_nr = rep(1:32, nrow(data_neural) / 32)
 # get LBA parameters (8 drift rates)
 true = param_draw(base_par = c("a", "b", "t0", "sd"),
                   n_drift  = 8,
                   dynamic  = FALSE)
+
 # simulate data retaining the stimulus order shown to subject 2,
 # and add neural data
 simulated = simulate_neural(true_pars = true,
@@ -61,5 +62,9 @@ head(simulated)
 # 4      1    4          1        1 1.335997        2 0.3238378
 # 5      1    2          1        1 1.757728        2 0.3281104
 # 6      1    3          2        1 1.572040        2 0.3861202
+
+# check stimulus order
+all(data_neural$stim == simulated$stim)
+# [1] TRUE
 
 }

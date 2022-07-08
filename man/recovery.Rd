@@ -45,7 +45,9 @@ simulated = simulate_data(true_pars = true,
   recovered = recovery(base_par = c("a", "b", "t0", "sd", "beta"),
                        dataset  = simulated)
 }
-print(rbind(true, recovered[1:length(true)]))
+
+# print the parameters
+# print(rbind(true, recovered[1:length(true)]))
 
 #              a        b        t0        sd      beta
 # true 0.6119832 1.235444 0.3101643 0.2719001 0.1847300
@@ -63,10 +65,9 @@ simulated = simulate_data(true_pars = true,
                       dataset   = simulated,
                        sigma_mod = 0.01)
 }
-print(rbind(true, recovered[1:length(true)]))
 
 # print part of parameters
-print(rbind(true[c(1:5,12)], recovered[c(1:5,12)]))
+# print(rbind(true[c(1:5,12)], recovered[c(1:5,12)]))
 
 #              a        b        t0        sd       v_1       v_8
 # [1,] 0.6119832 1.235444 0.3101643 0.2719001 0.3271797 0.6040344

@@ -39,22 +39,28 @@ set.seed(2022)
 # load prepared empirical data
 data("data_dynamic")
 
-# get dLBA parameters
+# get LBA parameters (8 drift rates)
 true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                   n_drift  = NULL,
                   dynamic  = TRUE)
-# simulate data retaining the stimulus order shown to subject 2
+
+# simulate data retaining the stimulus order shown to subject 2,
+# and add neural data
 simulated = simulate_dynamic(true_pars = true,
-                             n_blocks  = 16,
+                             sigma_gen = 0.01,
                              dataset   = data_dynamic)
 head(simulated)
 
-#   stim target condition       rt response   mean_v1   mean_v2
-# 1    1      1     novel 1.807239        2 0.5000000 0.5000000
-# 2    1      1     novel 4.307053        2 0.5280923 0.4719077
-# 3    3      2     novel 1.107353        1 0.5000000 0.5000000
-# 4    4      2     novel 3.858292        1 0.5000000 0.5000000
-# 5    2      1     novel 1.873553        2 0.5000000 0.5000000
-# 6    3      2     novel 2.170866        2 0.4719077 0.5280923
+#   stim target condition       rt response   mean_v1   mean_v2    neural
+# 1    1      1     novel 1.608958        1 0.5000000 0.5000000 0.4900472
+# 2    1      1     novel 2.026692        1 0.5230748 0.4769252 0.5334783
+# 3    3      2     novel 1.519964        1 0.5000000 0.5000000 0.5282756
+# 4    4      2     novel 1.712398        1 0.5000000 0.5000000 0.4850896
+# 5    2      1     novel 1.513373        2 0.5000000 0.5000000 0.5006154
+# 6    3      2     novel 2.134347        2 0.4769252 0.5230748 0.4712491
+
+# check stimulus order
+all(data_dynamic$stim == simulated$stim)
+# [1] TRUE
 
 }

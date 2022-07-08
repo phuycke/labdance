@@ -43,26 +43,27 @@ require(labdance)
 set.seed(2022)
 
 # load prepared empirical data
-data("data_neural")
+data("data_dynamic")
 
-# get dLBA parameters
-true = param_draw(base_par = c("a", "b", "t0", "sd"),
-                  n_drift  = 8,
-                  dynamic  = FALSE)
+# get LBA parameters (8 drift rates)
+true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                  n_drift  = NULL,
+                  dynamic  = TRUE)
 
 # simulate data retaining the stimulus order shown to subject 2,
-# and add neural data
 simulated = simulate_data(true_pars = true,
-                          sigma_gen = 0.01,
-                          dataset   = data_neural)
+                          dataset   = data_dynamic)
 head(simulated)
+#   stim target condition       rt response   mean_v1   mean_v2
+# 1    1      1     novel 1.608958        1 0.5000000 0.5000000
+# 2    1      1     novel 1.865296        2 0.5230748 0.4769252
+# 3    3      2     novel 1.554814        2 0.5000000 0.5000000
+# 4    4      2     novel 1.343585        2 0.5000000 0.5000000
+# 5    2      1     novel 1.712398        1 0.5000000 0.5000000
+# 6    3      2     novel 1.822126        2 0.4769252 0.5230748
 
-#   sub_id stim repetition block_nr       rt response    neural
-# 1      1    1          1        1 2.076967        1 0.3554553
-# 2      1    1          2        1 1.898463        2 0.3688368
-# 3      1    3          1        1 1.274176        2 0.3277951
-# 4      1    4          1        1 1.335997        2 0.3238378
-# 5      1    2          1        1 1.757728        2 0.3281104
-# 6      1    3          2        1 1.572040        2 0.3861202
+# check stimulus order
+all(data_dynamic$stim == simulated$stim)
+# [1] TRUE
 
 }
