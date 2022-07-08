@@ -31,6 +31,10 @@ test_that("faulty input is effectively handled", {
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
+  d_copy <- data_dynamic[NULL, ]
+  expect_error(simulate_dynamic(true_pars = true,
+                                sigma_gen = 0.01,
+                                dataset   = d_copy))
   # test with dynamic parameters
   true <- param_draw(base_par = c("a", "b", "t0", "sd"),
                      n_drift  = 8,
@@ -69,4 +73,16 @@ test_that("the output we get is expected", {
   expect_true(all(d$rt > 0))
   expect_true(all(c("mean_v1", "mean_v2") %in% colnames(d)))
   expect_true(all(round(d$mean_v1 + d$mean_v2, .1) == 1))
+})
+
+# test whether the output we get is expected
+test_that("the output we get is expected", {
+  true <- param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                     n_drift  = NULL,
+                     dynamic  = TRUE)
+  data("data_dynamic")
+  sim <- simulate_dynamic(true_pars = true, dataset = data_dynamic)
+  # check whether they are truly equal
+  expect_equal(data_dynamic$stim, sim$stim)
+  expect_equal(data_dynamic$condition, sim$condition)
 })

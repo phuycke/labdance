@@ -43,3 +43,18 @@ test_that("faulty input is effectively handled", {
                                      dataset = d_copy))
 
 })
+
+# test for bad input
+test_that("the otuput is a number", {
+  # simulated data
+  set.seed(2022)
+  true <- param_draw(c("a", "b", "t0", "sd"),
+                     n_drift = 8,
+                     dynamic = FALSE)
+  d <- simulate_data(true_pars = true)
+  # adjust the passed parameters
+  expect_equal(class(likelihood_behavioral(true,
+                                           d)),
+               "numeric")
+  expect_true(likelihood_behavioral(true, d) <= 1e6)
+})

@@ -40,6 +40,10 @@ test_that("faulty input is effectively handled", {
   expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
+  d_copy <- data_neural[NULL, ]
+  expect_error(simulate_neural(true_pars = true,
+                               sigma_gen = 0.01,
+                               dataset   = d_copy))
   # test with dynamic parameters
   true <- param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                      n_drift  = NULL,
@@ -74,4 +78,19 @@ test_that("the output we get is expected", {
   expect_true(all(d$block_nr[seq(1, 512, 32)] == 1:16))
   expect_true(all(d$rt > 0))
   expect_length(unique(d$sub_id), 1)
+})
+
+# test whether the output we get is expected
+test_that("the output we get is expected", {
+  true <- param_draw(base_par = c("a", "b", "t0", "sd"),
+                    n_drift  = 8,
+                    dynamic  = FALSE)
+  data("data_neural")
+  data_neural$block_nr <- rep(1:8, each = 32)
+  sim <- simulate_neural(true_pars = true, dataset = data_neural)
+  sim <- sim[1:256, ]
+  # check whether they are truly equal
+  expect_equal(data_neural$stim, sim$stim)
+  expect_equal(data_neural$repetition, sim$repetition)
+  expect_equal(data_neural$block_nr, sim$block_nr)
 })

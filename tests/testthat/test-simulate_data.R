@@ -9,7 +9,7 @@ test_that("faulty input is effectively handled", {
                              sigma_gen = 0.01,
                              dataset   = d_copy))
   d_copy <- data_dynamic
-  d_copy$repetition <- NULL
+  d_copy$condition <- NULL
   expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
@@ -27,6 +27,16 @@ test_that("faulty input is effectively handled", {
                              dataset   = d_copy))
   d_copy <- data_neural
   d_copy$block_nr <- NULL
+  expect_error(simulate_data(true_pars = true,
+                             sigma_gen = 0.01,
+                             dataset   = d_copy))
+  d_copy <- data_neural
+  d_copy$condition <- "novel"
+  d_copy$block_nr <- 1
+  expect_error(simulate_data(true_pars = true,
+                             sigma_gen = 0.01,
+                             dataset   = d_copy))
+  d_copy <- data_neural[NULL, ]
   expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
