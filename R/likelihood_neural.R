@@ -1,4 +1,4 @@
-#' @title likelihood.neural
+#' @title likelihood_neural
 #'
 #' @description Helper function: called when "likelihood.summed" is called.
 #'     Calculates the likelihood given passed (neural) data.
@@ -16,32 +16,32 @@
 #' set.seed(2022)
 #'
 #' # neural LBA
-#' true = param.draw(base_par = c("a", "b", "t0", "sd"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = F)
-#' dataset = simulate.data(true_pars = true,
+#' dataset = simulate_data(true_pars = true,
 #'                         dataset   = NULL,
 #'                         sigma_gen = 0.01)
-#' likelihood.neural(to_optim = true,
+#' likelihood_neural(to_optim = true,
 #'                   dataset  = dataset)
 #' # [1] 0.04932333
 #'
 #' # dynamic neural LBA
-#' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
 #'                   n_drift  = NULL,
 #'                   dynamic  = T)
-#' dataset = simulate.data(true_pars = true,
+#' dataset = simulate_data(true_pars = true,
 #'                         dataset   = NULL,
 #'                         sigma_gen = 0.01)
-#' likelihood.neural(to_optim = true,
+#' likelihood_neural(to_optim = true,
 #'                   dataset  = dataset)
 #' # [1] 0.05276045
 #'
-#' @export likelihood.neural
+#' @export
 #' @import rtdists
 
 
-likelihood.neural <- function(to_optim,
+likelihood_neural <- function(to_optim,
                               dataset = NULL){
 
   # test for faulty input

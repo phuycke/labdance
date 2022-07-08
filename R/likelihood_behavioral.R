@@ -1,4 +1,4 @@
-#' @title likelihood.behavioral
+#' @title likelihood_behavioral
 #'
 #' @description Calculates the -log(likelihood) based on the passed behavioral
 #'     (i.e. reaction times and choice) data
@@ -16,19 +16,19 @@
 #' set.seed(2022)
 #'
 #' # get parameters, simulate data and calculate likelihood
-#' true = param.draw(base_par = c("a", "b", "t0", "sd"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = F)
-#' simulated = simulate.data(true_pars = true,
+#' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL)
-#' ll.true = likelihood.behavioral(to_optim = true,
+#' ll.true = likelihood_behavioral(to_optim = true,
 #'                                 dataset  = simulated)
 #'
 #' # calculate likelihood for another parameter set
-#' test = param.draw(base_par = c("a", "b", "t0", "sd"),
+#' test = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = F)
-#' ll.test = likelihood.behavioral(to_optim = test,
+#' ll.test = likelihood_behavioral(to_optim = test,
 #'                                 dataset  = simulated)
 #'
 #' # check that likelihood is lowest for the true parameter set
@@ -38,11 +38,11 @@
 #' # [1] "Negative loglikelihood for other parameters: 926.55"
 #'
 #'
-#' @export likelihood.behavioral
+#' @export
 #' @import rtdists
 
 
-likelihood.behavioral <- function(to_optim,
+likelihood_behavioral <- function(to_optim,
                                   dataset = NULL){
 
   # handle bad input

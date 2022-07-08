@@ -1,4 +1,4 @@
-#' @title param.draw
+#' @title param_draw
 #'
 #' @description Generates (d)(n)LBA parameters within a reasonable range.
 #'
@@ -21,19 +21,19 @@
 #'
 #' set.seed(2022)
 #'
-#' param.draw(base_par = c("a", "b", "t0", "sd"),
+#' param_draw(base_par = c("a", "b", "t0", "sd"),
 #'            n_drift  = NULL,
 #'            dynamic  = T)
 #'
 #' #         a         b        t0        sd
 #' # 0.6119832 1.2354445 0.3101643 0.2719001
 #'
-#' @export param.draw
+#' @export
 #' @import rtdists
 #' @import stats
 
 
-param.draw <- function(base_par = c("a", "b", "t0", "sd"),
+param_draw <- function(base_par = c("a", "b", "t0", "sd"),
                        n_drift  = NULL,
                        dynamic  = F){
 

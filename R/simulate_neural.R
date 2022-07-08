@@ -1,4 +1,4 @@
-#' @title simulate.neural
+#' @title simulate_neural
 #'
 #' @description Helper function called by simulate.data() whenever data from
 #'     a neural model (nLBA, dnLBA) needs to be generated.
@@ -13,7 +13,7 @@
 #'     Replaces the stimuli and repetitions by information observed in the data. Hence,
 #'     this allows data to be generated relying on stimuli actually seen by
 #'     subjects.
-#' @usage simulate.neural(true_pars = true, sigma_gen = 0.01, dataset = d)
+#'
 #' @return data.frame containing behavioral and neural data.
 #' @examples
 #' require(labdance)
@@ -21,15 +21,15 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/simulate.neural.RData")
+#' load("data/data_neural.RData")
 #'
 #' # get LBA parameters (8 drift rates)
-#' true = param.draw(base_par = c("a", "b", "t0", "sd"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = FALSE)
 #' # simulate data retaining the stimulus order shown to subject 2,
 #' # and add neural data
-#' simulated = simulate.neural(true_pars = true,
+#' simulated = simulate_neural(true_pars = true,
 #'                             sigma_gen = 0.01,
 #'                             dataset   = d)
 #' head(simulated)
@@ -42,11 +42,11 @@
 #' # 5      1    2          1        1 1.757728        2 0.3281104
 #' # 6      1    3          2        1 1.572040        2 0.3861202
 #'
-#' @export simulate.neural
+#' @export
 #' @import rtdists
 #' @import stats
 
-simulate.neural <- function(sub_id    = 1,
+simulate_neural <- function(sub_id    = 1,
                             n_blocks  = 16,
                             true_pars = NULL,
                             sigma_gen = NULL,

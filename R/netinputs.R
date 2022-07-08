@@ -19,7 +19,7 @@
 #' require(labdance)
 #'
 #' # load prepared empirical data
-#' load("data/simulate.dynamic.RData")
+#' load("data/data_dynamic.RData")
 #'
 #' # simulate netinputs based on data and low beta
 #' ni = netinputs(beta = .2,

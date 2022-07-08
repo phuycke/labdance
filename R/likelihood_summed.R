@@ -1,4 +1,4 @@
-#' @title likelihood.summed
+#' @title likelihood_summed
 #'
 #' @description Returns sum of likelihoods based on passed data. Note that
 #'     both behavioral and neural data can be inputted to this function, but
@@ -27,49 +27,49 @@
 #' require(labdance)
 #'
 #' # dynamic LBA
-#' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
 #'                   n_drift  = NULL,
 #'                   dynamic  = T)
-#' simulated = simulate.data(true_pars = true,
+#' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL,
 #'                           sigma_gen = NULL)
-#' ll.s = likelihood.summed(to_optim = true,
+#' ll.s = likelihood_summed(to_optim = true,
 #'                          dataset  = simulated)
-#' ll.b = likelihood.behavioral(to_optim = true,
+#' ll.b = likelihood_behavioral(to_optim = true,
 #'                             dataset  = simulated)
 #' # summed LL should be equal to the behavioral LL
 #' stopifnot(ll.s == ll.b)
 #'
 #' # dynamic neural LBA
-#' simulated = simulate.data(true_pars = true,
+#' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL,
 #'                           sigma_gen = 0.01)
-#' ll.b = likelihood.behavioral(to_optim = true,
+#' ll.b = likelihood_behavioral(to_optim = true,
 #'                             dataset  = simulated)
-#' ll.n = likelihood.neural(to_optim = true,
+#' ll.n = likelihood_neural(to_optim = true,
 #'                          dataset  = simulated)
-#' ll.s = likelihood.summed(to_optim  = true,
+#' ll.s = likelihood_summed(to_optim  = true,
 #'                          dataset   = simulated,
 #'                          sigma_mod = 0.01)
 #' # summed LL should be equal to the sum of behavioral LL and neural LL times a constant
 #' stopifnot(ll.s == (ll.b + (1/(2*(0.01)^2)) * ll.n))
 #'
-#' @export likelihood.summed
+#' @export likelihood_summed
 #' @import rtdists
 
 
-likelihood.summed <- function(to_optim,
+likelihood_summed <- function(to_optim,
                               dataset   = NULL,
                               sigma_mod = NULL){
 
-  ll.behavioral = likelihood.behavioral(to_optim, dataset)
+  ll.behavioral = likelihood_behavioral(to_optim, dataset)
 
   # for non neural data, only return the behavioral loglikelihood
   if (is.null(dataset$neural)){
     return(ll.behavioral)
   } else{
     # for neural data, return the sum of both
-    ll.neural = likelihood.neural(to_optim, dataset)
+    ll.neural = likelihood_neural(to_optim, dataset)
     return(ll.behavioral + (1/(2*(sigma_mod)^2)) * ll.neural)
   }
 }

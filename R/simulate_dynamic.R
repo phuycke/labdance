@@ -1,6 +1,6 @@
-#' @title simulate.dynamic
+#' @title simulate_dynamic
 #'
-#' @description Helper function called by simulate.data() whenever data from
+#' @description Helper function called by simulate_data() whenever data from
 #'     a dynamic model (dLBA, dnLBA) needs to be generated.
 #'
 #' @param true_pars The LBA parameters used to generate the data.
@@ -11,7 +11,7 @@
 #'     Replaces the stimuli and conditions by information observed in the data. Hence,
 #'     this allows data to be generated relying on stimuli actually seen by
 #'     subjects.
-#' @usage simulate.dynamic(true_pars = true, n_blocks  = 16, dataset = d)
+#'
 #' @return data.frame containing behavioral and/or neural data.
 #' @examples
 #' require(labdance)
@@ -19,14 +19,14 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/simulate.dynamic.RData")
+#' load("data/data_dynamic.RData")
 #'
 #' # get dLBA parameters
-#' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
 #'                   n_drift  = NULL,
 #'                   dynamic  = TRUE)
 #' # simulate data retaining the stimulus order shown to subject 2
-#' simulated = simulate.dynamic(true_pars = true,
+#' simulated = simulate_dynamic(true_pars = true,
 #'                              n_blocks  = 16,
 #'                              dataset   = d)
 #' head(simulated)
@@ -39,13 +39,13 @@
 #' # 5    2      1     novel 1.873553        2 0.5000000 0.5000000
 #' # 6    3      2     novel 2.170866        2 0.4719077 0.5280923
 #'
-#' @export simulate.dynamic
+#' @export
 #' @import rtdists
 #' @import stats
 
 
 # simulate RW data, reset W to 0 based every 32 trials
-simulate.dynamic <- function(n_blocks  = 16,
+simulate_dynamic <- function(n_blocks  = 16,
                              true_pars = NULL,
                              sigma_gen = NULL,
                              dataset   = NULL){

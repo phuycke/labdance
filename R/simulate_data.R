@@ -1,7 +1,7 @@
-#' @title simulate.data
+#' @title simulate_data
 #'
-#' @description Function that makes calls to simulate.dynamic() or
-#'     simulate.neural() depending on the type of underlying model.
+#' @description Function that makes calls to simulate_dynamic() or
+#'     simulate_neural() depending on the type of underlying model.
 #'
 #' @param sub_id Optional: only for neural models.
 #'     The subject identifier. Can be used to generate different datasets that
@@ -14,7 +14,7 @@
 #' @param dataset Optional: only when empirical data is available.
 #'     This allows data to be generated relying on stimuli actually seen by
 #'     subjects.
-#' @usage simulate.data(true_pars = true, sigma_gen = 0.01, dataset = d)
+#'
 #' @return data.frame containing simulated behavioral and/or neural data
 #'     depending on the underlying model.
 #' @examples
@@ -23,16 +23,16 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/simulate.neural.RData")
+#' load("data/data_neural.RData")
 #'
 #' # get dLBA parameters
-#' true = param.draw(base_par = c("a", "b", "t0", "sd"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = FALSE)
 #'
 #' # simulate data retaining the stimulus order shown to subject 2,
 #' # and add neural data
-#' simulated = simulate.data(true_pars = true,
+#' simulated = simulate_data(true_pars = true,
 #'                           sigma_gen = 0.01,
 #'                           dataset   = d)
 #' head(simulated)
@@ -45,11 +45,11 @@
 #' # 5      1    2          1        1 1.757728        2 0.3281104
 #' # 6      1    3          2        1 1.572040        2 0.3861202
 #'
-#' @export simulate.data
+#' @export
 #' @import rtdists
 
 
-simulate.data <- function(sub_id    = 1,
+simulate_data <- function(sub_id    = 1,
                           n_blocks  = 16,
                           true_pars = NULL,
                           sigma_gen = NULL,
@@ -80,10 +80,10 @@ simulate.data <- function(sub_id    = 1,
 
   # d(n)LBA
   if ("beta" %in% names(true_pars)){
-    return(simulate.dynamic(n_blocks, true_pars, sigma_gen, dataset))
+    return(simulate_dynamic(n_blocks, true_pars, sigma_gen, dataset))
   } else{
     # (n)LBA
-    return(simulate.neural(sub_id, n_blocks, true_pars, sigma_gen, dataset))
+    return(simulate_neural(sub_id, n_blocks, true_pars, sigma_gen, dataset))
   }
 }
 

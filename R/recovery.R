@@ -22,10 +22,10 @@
 #' set.seed(2022)
 #'
 #' # dynamic LBA
-#' true = param.draw(base_par = c("a", "b", "t0", "sd", "beta"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
 #'                   n_drift  = NULL,
 #'                   dynamic  = T)
-#' simulated = simulate.data(true_pars = true,
+#' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL)
 #' \dontrun{
 #'   recovered = recovery(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -38,10 +38,10 @@
 #' #      0.6795545 1.272554 0.3556901 0.2720122 0.2504881
 #'
 #' # neural LBA
-#' true = param.draw(base_par = c("a", "b", "t0", "sd"),
+#' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
 #'                   dynamic  = F)
-#' simulated = simulate.data(true_pars = true,
+#' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL,
 #'                           sigma_gen = 0.01)
 #' \dontrun{
@@ -55,7 +55,7 @@
 #' # true 0.1458743 1.010073 0.4683325 0.3838641 0.2961068 0.4284725 0.4670166 0.5195746 0.5799875 0.6024224 0.6095980 0.6688995
 #' #      0.6087317 1.185651 0.5912251 0.3862249 0.2979105 0.4301181 0.4662076 0.5202188 0.5790622 0.6046539 0.6074382 0.6683207
 #'
-#' @export recovery
+#' @export
 #' @import rtdists
 #' @import stats
 
@@ -85,10 +85,10 @@ recovery <- function(base_par,
 
   # actual parameter recovery
   for (q in 1:cycles){
-    o = tryCatch(optim(param.draw(base_par = base_par,                # initial parameter guess
+    o = tryCatch(optim(param_draw(base_par = base_par,                # initial parameter guess
                                   n_drift  = n_drift,
                                   dynamic  = dynamic),
-                       likelihood.summed,                             # goal function to optimize
+                       likelihood_summed,                             # goal function to optimize
                        method        = "L-BFGS-B",                    # minimization method
                        dataset       = dataset,
                        sigma_mod     = sigma_mod,
