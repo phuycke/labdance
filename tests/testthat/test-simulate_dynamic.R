@@ -2,9 +2,9 @@
 # test for bad input
 test_that("faulty input is effectively handled", {
   # parameters that can be used to simulate data
-  true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
-                    n_drift  = NULL,
-                    dynamic  = T)
+  true <- param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                     n_drift  = NULL,
+                     dynamic  = TRUE)
   # test with simulated data
   expect_error(simulate_dynamic(true_pars = NULL,
                                 sigma_gen = 0.01,
@@ -21,20 +21,20 @@ test_that("faulty input is effectively handled", {
                                 dataset   = NULL))
   # tests with empirical data
   data("data_dynamic")
-  d_copy = data_dynamic
-  d_copy$stim = NULL
+  d_copy <- data_dynamic
+  d_copy$stim <- NULL
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
-  d_copy = data_dynamic
-  d_copy$condition = NULL
+  d_copy <- data_dynamic
+  d_copy$condition <- NULL
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
   # test with dynamic parameters
-  true = param_draw(base_par = c("a", "b", "t0", "sd"),
-                    n_drift  = 8,
-                    dynamic  = F)
+  true <- param_draw(base_par = c("a", "b", "t0", "sd"),
+                     n_drift  = 8,
+                     dynamic  = F)
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
@@ -42,11 +42,11 @@ test_that("faulty input is effectively handled", {
 
 # test whether the output we get is expected
 test_that("the output we get is expected", {
-  n_blocks = 12
-  d = simulate_dynamic(n_blocks  = n_blocks,
-                       true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
-                                              n_drift  = NULL,
-                                              dynamic  = T),
+  n_blocks <- 12
+  d <- simulate_dynamic(n_blocks  = n_blocks,
+                        true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                                               n_drift  = NULL,
+                                               dynamic  = TRUE),
                        sigma_gen = NULL)
   expect_equal(nrow(d), n_blocks * 32)
   expect_equal(ncol(d), 7)
@@ -54,7 +54,7 @@ test_that("the output we get is expected", {
   # with neural data
   d = simulate_dynamic(true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                                               n_drift  = NULL,
-                                              dynamic  = T),
+                                              dynamic  = TRUE),
                        sigma_gen = 0.01)
   expect_equal(nrow(d), 512)
   expect_equal(ncol(d), 8)

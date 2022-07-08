@@ -54,7 +54,7 @@ simulate_data <- function(sub_id    = 1,
                           n_blocks  = 16,
                           true_pars = NULL,
                           sigma_gen = NULL,
-                          dataset   = NULL){
+                          dataset   = NULL) {
 
   # checking for faulty input
   stopifnot(exprs = {
@@ -65,13 +65,13 @@ simulate_data <- function(sub_id    = 1,
     length(true_pars) > 0
     !is.null(names(true_pars))
   })
-  if (!is.null(sigma_gen)){
+  if (!is.null(sigma_gen)) {
     stopifnot(exprs = {
       class(sigma_gen) %in% c("numeric", "integer")
       (sigma_gen > 0 & sigma_gen < 1000)
     })
   }
-  if (!is.null(dataset)){
+  if (!is.null(dataset)) {
     stopifnot(exprs = {
       xor(all(c("stim", "condition") %in% colnames(dataset)), # dynamic
           all(c("stim", "repetition", "block_nr") %in% colnames(dataset))) # neural
@@ -80,7 +80,7 @@ simulate_data <- function(sub_id    = 1,
   }
 
   # d(n)LBA
-  if ("beta" %in% names(true_pars)){
+  if ("beta" %in% names(true_pars)) {
     return(simulate_dynamic(n_blocks, true_pars, sigma_gen, dataset))
   } else{
     # (n)LBA

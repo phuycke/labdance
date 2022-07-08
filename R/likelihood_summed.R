@@ -60,16 +60,16 @@
 
 likelihood_summed <- function(to_optim,
                               dataset   = NULL,
-                              sigma_mod = NULL){
+                              sigma_mod = NULL) {
 
-  ll.behavioral = likelihood_behavioral(to_optim, dataset)
+  ll.behavioral <- likelihood_behavioral(to_optim, dataset)
 
   # for non neural data, only return the behavioral loglikelihood
-  if (is.null(dataset$neural)){
+  if (is.null(dataset$neural)) {
     return(ll.behavioral)
   } else{
     # for neural data, return the sum of both
-    ll.neural = likelihood_neural(to_optim, dataset)
+    ll.neural <- likelihood_neural(to_optim, dataset)
     return(ll.behavioral + (1/(2*(sigma_mod)^2)) * ll.neural)
   }
 }

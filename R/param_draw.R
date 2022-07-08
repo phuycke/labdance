@@ -35,7 +35,7 @@
 
 param_draw <- function(base_par = c("a", "b", "t0", "sd"),
                        n_drift  = NULL,
-                       dynamic  = FALSE){
+                       dynamic  = FALSE) {
 
   # checking for faulty input
   stopifnot(exprs = {
@@ -49,20 +49,20 @@ param_draw <- function(base_par = c("a", "b", "t0", "sd"),
   })
   if (is.numeric(n_drift)) stopifnot(n_drift > 1)
   for (e in base_par) stopifnot(e %in% c("a", "b", "t0", "sd", "beta"))
-  if (!dynamic){
-    if("beta" %in% base_par){
+  if (!dynamic) {
+    if("beta" %in% base_par) {
       stop("\nNon dynamic model but beta is asked.")
     }
   }
 
   s1 <- c(
-    a    = runif(1, 0, .75),
-    b    = runif(1, .75, 1.5),
-    t0   = runif(1, 0.25, 0.75),
-    sd   = runif(1, 0, 0.5),
-    beta = runif(1, 0, 1)
+    a    <- runif(1, 0, .75),
+    b    <- runif(1, .75, 1.5),
+    t0   <- runif(1, 0.25, 0.75),
+    sd   <- runif(1, 0, 0.5),
+    beta <- runif(1, 0, 1)
   )
-  if (dynamic){
+  if (dynamic) {
     return(s1[base_par])
   } else{
     s2 <- sort(rnorm(n_drift, 0.5, 0.1), decreasing = FALSE)

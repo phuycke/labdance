@@ -55,7 +55,7 @@ simulate_neural <- function(sub_id    = 1,
                             n_blocks  = 16,
                             true_pars = NULL,
                             sigma_gen = NULL,
-                            dataset   = NULL){
+                            dataset   = NULL) {
 
   # checking for faulty input
   stopifnot(exprs = {
@@ -66,13 +66,13 @@ simulate_neural <- function(sub_id    = 1,
     !is.null(names(true_pars))
     !("beta" %in% names(true_pars))
   })
-  if (!is.null(sigma_gen)){
+  if (!is.null(sigma_gen)) {
     stopifnot(exprs = {
       class(sigma_gen) %in% c("numeric", "integer")
       (sigma_gen > 0 & sigma_gen < 1000)
     })
   }
-  if (!is.null(dataset)){
+  if (!is.null(dataset)) {
     stopifnot(exprs = {
       all(c("stim", "repetition", "block_nr") %in% colnames(dataset))
       nrow(dataset) > 0
@@ -80,38 +80,38 @@ simulate_neural <- function(sub_id    = 1,
   }
 
   # placeholder for later
-  df = data.frame(rep(sub_id, times = n_blocks * 32))
-  colnames(df) = "sub_id"
+  df <- data.frame(rep(sub_id, times = n_blocks * 32))
+  colnames(df) <- "sub_id"
 
   # determine the stimulus order and associated repetition (simulated or empirical)
-  if (is.null(dataset)){
-    df$stim = rep(rep(1:4, times = 8), times = n_blocks)
-    df$repetition = rep(rep(1:8, each = 4), times = n_blocks)
-    df$block_nr = rep(1:n_blocks, each = 32)
+  if (is.null(dataset)) {
+    df$stim <- rep(rep(1:4, times = 8), times = n_blocks)
+    df$repetition <- rep(rep(1:8, each = 4), times = n_blocks)
+    df$block_nr <- rep(1:n_blocks, each = 32)
   } else{
-    df$stim = dataset$stim
-    df$repetition = dataset$repetition
-    df$block_nr = rep(1:(nrow(dataset)/32), each = 32)
+    df$stim <- dataset$stim
+    df$repetition <- dataset$repetition
+    df$block_nr <- rep(1:(nrow(dataset)/32), each = 32)
   }
 
   # dependent variables
-  df$rt = NA
-  df$response = NA
+  df$rt <- NA
+  df$response <- NA
   # neural data (optional)
-  if (!is.null(sigma_gen)){
-    df$neural = NA
+  if (!is.null(sigma_gen)) {
+    df$neural <- NA
   }
 
   # drift rates positively correlated with repetition count
-  drifts = true_pars[grep("v_", names(true_pars))]
+  drifts <- true_pars[grep("v_", names(true_pars))]
 
-  for (i in 1:nrow(df)){
+  for (i in 1:nrow(df)) {
     # get stimulus and associated repetition
-    stim       = df$stim[i]
-    repetition = df$repetition[i]
+    stim       <- df$stim[i]
+    repetition <- df$repetition[i]
 
     # determine drift rate based on repetition count
-    v = c(drifts[repetition], 1-drifts[repetition])
+    v <- c(drifts[repetition], 1-drifts[repetition])
 
     # simulate an LBA trial
     simulated <- rLBA(1,
@@ -121,17 +121,17 @@ simulate_neural <- function(sub_id    = 1,
                       mean_v = v,
                       sd_v   = c(true_pars["sd"], true_pars["sd"]),
                       silent = TRUE)
-    df$rt[i] = simulated$rt
-    df$response[i] = simulated$response
+    df$rt[i] <- simulated$rt
+    df$response[i] <- simulated$response
 
     # add neural data (a function of the drift rate) is sigma generation is known
-    if (!is.null(sigma_gen)){
-      df$neural[i] = rnorm(1, v, sigma_gen)
+    if (!is.null(sigma_gen)) {
+      df$neural[i] <- rnorm(1, v, sigma_gen)
     }
   }
 
   # add accuracy condition to check
-  levels(df$repetition) = as.character(1:8)
+  levels(df$repetition) <- as.character(1:8)
 
   return(df)
 }

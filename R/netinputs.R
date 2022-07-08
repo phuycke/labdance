@@ -44,14 +44,14 @@
 
 
 netinputs <- function(beta    = 0.5,
-                      dataset = NULL){
+                      dataset = NULL) {
 
   # stop if the input is not correct
   stopifnot(exprs = {
     (class(beta) %in% c("numeric", "integer"))
     (beta > 0 & beta < 10)
   })
-  if (!is.null(dataset)){
+  if (!is.null(dataset)) {
     stopifnot(exprs = {
       (!is.null(names(dataset)))
       nrow(dataset) > 0
@@ -59,60 +59,60 @@ netinputs <- function(beta    = 0.5,
       })
   }
 
-  stim = diag(4)
-  t    = matrix(c(1, 1, 0, 0, 0, 0, 1, 1),
-                nrow = 4)
-  w_nov = matrix(0,
-                 nrow = nrow(stim),
-                 ncol = ncol(t))
-  w_rep = matrix(0,
-                 nrow = nrow(stim),
-                 ncol = ncol(t))
+  stim <- diag(4)
+  t    <- matrix(c(1, 1, 0, 0, 0, 0, 1, 1),
+                 nrow = 4)
+  w_nov <- matrix(0,
+                  nrow = nrow(stim),
+                  ncol = ncol(t))
+  w_rep <- matrix(0,
+                  nrow = nrow(stim),
+                  ncol = ncol(t))
 
   # data holder
-  df = data.frame(matrix(0,
-                  nrow = ifelse(is.null(dataset), 512, nrow(dataset)),
-                  ncol = 4))
-  colnames(df) = c("stim", "condition", "mean_v1", "mean_v2")
+  df <- data.frame(matrix(0,
+                   nrow = ifelse(is.null(dataset), 512, nrow(dataset)),
+                   ncol = 4))
+  colnames(df) <- c("stim", "condition", "mean_v1", "mean_v2")
 
   # determine the stimuli
-  if (is.null(dataset)){
-    df$stim = rep(1:4, times = 128)
-    df$condition = rep(rep(c("novel", "repeating"), each = 32), times = 8)
+  if (is.null(dataset)) {
+    df$stim <- rep(1:4, times = 128)
+    df$condition <- rep(rep(c("novel", "repeating"), each = 32), times = 8)
   } else{
-    df$stim = dataset$stim
-    df$condition = dataset$condition
+    df$stim <- dataset$stim
+    df$condition <- dataset$condition
   }
 
   # simulate
-  for (i in 1:nrow(df)){
-    s = df$stim[i]
+  for (i in 1:nrow(df)) {
+    s <- df$stim[i]
     # input at output units, logistic activation function
-    if (df$condition[i] == "novel"){
-      netinput = 1 / (1 + exp(-(stim[s,] %*% w_nov)))
+    if (df$condition[i] == "novel") {
+      netinput <- 1 / (1 + exp(-(stim[s,] %*% w_nov)))
     } else{
-      netinput = 1 / (1 + exp(-(stim[s,] %*% w_rep)))
+      netinput <- 1 / (1 + exp(-(stim[s,] %*% w_rep)))
     }
     stopifnot(round(sum(netinput), 10) == 1)
 
     # weight update
-    A = matrix(stim[s,])
-    B = (t[s, ] - netinput)
+    A <- matrix(stim[s,])
+    B <- (t[s, ] - netinput)
     # input at output units, logistic activation function
-    if (df$condition[i] == "novel"){
-      w_nov = w_nov + beta * (A %*% B)
+    if (df$condition[i] == "novel") {
+      w_nov <- w_nov + beta * (A %*% B)
     } else{
-      w_rep = w_rep + beta * (A %*% B)
+      w_rep <- w_rep + beta * (A %*% B)
     }
 
     # save the netinputs (used during estimation of LR)
-    df[i,3:4] = netinput
+    df[i,3:4] <- netinput
 
     # reset the weights based on random draw
-    if (i %% 32 == 0 & df$condition[i] == "novel"){
-      w_nov = matrix(0,
-                     nrow = nrow(stim),
-                     ncol = ncol(t))
+    if (i %% 32 == 0 & df$condition[i] == "novel") {
+      w_nov <- matrix(0,
+                      nrow = nrow(stim),
+                      ncol = ncol(t))
     }
   }
   # return the actual netinputs

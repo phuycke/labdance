@@ -42,7 +42,7 @@
 
 
 likelihood_neural <- function(to_optim,
-                              dataset = NULL){
+                              dataset = NULL) {
 
   # test for faulty input
   # handle bad input
@@ -50,7 +50,7 @@ likelihood_neural <- function(to_optim,
     (!is.null(names(to_optim)))
     all(c("a", "b", "t0", "sd") %in% names(to_optim))
   })
-  if (!is.null(dataset)){
+  if (!is.null(dataset)) {
     stopifnot(exprs = {
       (!is.null(names(to_optim)))
       xor("repetition" %in% names(dataset), "mean_v1" %in% names(dataset))
@@ -59,16 +59,17 @@ likelihood_neural <- function(to_optim,
   if (!is.null(dataset$mean_v1)) stopifnot((!is.null(dataset$neural)))
 
   # neural LBA
-  if ("repetition" %in% names(dataset)){
+  if ("repetition" %in% names(dataset)) {
     # for nLBA
-    sum_ll = 0
-    for (i in seq_along(unique(dataset$repetition))){
-      sum_ll = sum_ll + sum((dataset$neural[dataset$repetition == i] - to_optim[[grep(sprintf("v_%d", i), names(to_optim))]])^2)
+    sum_ll <- 0
+    for (i in seq_along(unique(dataset$repetition))) {
+      sum_ll <- sum_ll + sum((dataset$neural[dataset$repetition == i] -
+                                to_optim[[grep(sprintf("v_%d", i), names(to_optim))]])^2)
     }
     return(sum_ll)
   }
   # dynamic neural LBA
-  if ("mean_v1" %in% names(dataset)){
+  if ("mean_v1" %in% names(dataset)) {
     # for dnLBA
     return(sum((dataset$neural - dataset$mean_v1)^2))
   }
