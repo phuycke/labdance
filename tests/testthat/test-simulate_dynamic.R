@@ -20,14 +20,14 @@ test_that("faulty input is effectively handled", {
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
   # tests with empirical data
-  load(file = system.file("data", "simulate_dynamic.RData",
+  load(file = system.file("data", "data_dynamic.RData",
                           package = "labdance"))
-  d_copy = d
+  d_copy = d1
   d_copy$stim = NULL
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
-  d_copy = d
+  d_copy = d1
   d_copy$condition = NULL
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
@@ -39,6 +39,7 @@ test_that("faulty input is effectively handled", {
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = NULL))
+  rm(d1)
 })
 
 # test whether the output we get is expected
@@ -69,4 +70,3 @@ test_that("the output we get is expected", {
   expect_true(all(c("mean_v1", "mean_v2") %in% colnames(d)))
   expect_true(all(round(d$mean_v1 + d$mean_v2, .1) == 1))
 })
-

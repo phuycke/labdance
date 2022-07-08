@@ -24,23 +24,24 @@ test_that("faulty input is effectively handled", {
                                sigma_gen = 0.01,
                                dataset   = NULL))
   # tests with empirical data
-  load(file = system.file("data", "simulate_neural.RData",
+  load(file = system.file("data", "data_neural.RData",
                           package = "labdance"))
-  d_copy = d
+  d_copy = d2
   d_copy$stim = NULL
   expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
-  d_copy = d
+  d_copy = d2
   d_copy$repetition = NULL
   expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
-  d_copy = d
+  d_copy = d2
   d_copy$block_nr = NULL
   expect_error(simulate_neural(true_pars = true,
                                sigma_gen = 0.01,
                                dataset   = d_copy))
+  rm(d2)
   # test with dynamic parameters
   true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                     n_drift  = NULL,

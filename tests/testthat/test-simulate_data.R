@@ -2,36 +2,38 @@
 # test for bad input
 test_that("faulty input is effectively handled", {
   # tests with empirical data
-  load(file = system.file("data", "simulate_dynamic.RData",
+  load(file = system.file("data", "data_dynamic.RData",
                           package = "labdance"))
-  d_copy = d
+  d_copy = d1
   d_copy$stim = NULL
   expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
-  d_copy = d
+  d_copy = d1
   d_copy$repetition = NULL
   expect_error(simulate_data(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = d_copy))
+  rm(d1)
   # tests with empirical data
   load(file = system.file("data", "simulate_neural.RData",
                           package = "labdance"))
-  d_copy = d
+  d_copy = d2
   d_copy$stim = NULL
   expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
-  d_copy = d
+  d_copy = d2
   d_copy$repetition = NULL
   expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
-  d_copy = d
+  d_copy = d2
   d_copy$block_nr = NULL
   expect_error(simulate_data(true_pars = true,
                              sigma_gen = 0.01,
                              dataset   = d_copy))
+  rm(d2)
 })
 
 # test whether the output we get is expected

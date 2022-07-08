@@ -11,10 +11,11 @@ test_that("faulty input is effectively handled", {
   # adjust the passed parameters
   expect_error(likelihood_neural(true[-1],
                                  dataset = d))
+  rm(d)
   # work with empirical data
-  load(file = system.file("data", "simulate.neural.RData",
+  load(file = system.file("data", "data_neural.RData",
                           package = "labdance"))
-  d_copy = d
+  d_copy = d2
   d_copy$neural = rnorm(nrow(d_copy))
   d_copy$mean_v1 = rnorm(nrow(d_copy))
   expect_error(likelihood_neural(true,
