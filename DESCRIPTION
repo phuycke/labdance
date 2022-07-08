@@ -23,8 +23,8 @@ BugReports: https://github.com/phuycke/labdance/issues
 Depends:
     R (>= 3.6.3)
 Imports:
-    rtdists (>= 0.11-2),
-    stats (>= 4.2.1)
+    rtdists,
+    stats
 Suggests:
     testthat (>= 3.0.0),
     glba,
