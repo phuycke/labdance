@@ -7,13 +7,12 @@ test_that("faulty input is effectively handled", {
   expect_error(netinputs(beta = 100))
   expect_error(netinputs(beta = NULL))
   # tests with empirical data
-  load(file = system.file("data", "data_dynamic.RData",
-                          package = "labdance"))
-  d_copy = d1
+  data("data_dynamic")
+  d_copy = data_dynamic
   d_copy$stim = NULL
   expect_error(netinputs(beta    = .5,
                          dataset = d_copy))
-  d_copy = d1
+  d_copy = data_dynamic
   d_copy$condition = NULL
   expect_error(netinputs(beta    = .5,
                          dataset = d_copy))
@@ -21,6 +20,6 @@ test_that("faulty input is effectively handled", {
   test = netinputs(beta = .7)
   expect_true(all(round(test[[1]] + test[[2]], 10) == 1))
   test = netinputs(beta = .7,
-                   dataset = d1)
+                   dataset = data_dynamic)
   expect_true(all(round(test[[1]] + test[[2]], 10) == 1))
 })
