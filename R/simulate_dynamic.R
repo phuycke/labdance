@@ -19,7 +19,7 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/data_dynamic.RData")
+#' data("data_dynamic")
 #'
 #' # get dLBA parameters
 #' true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
@@ -28,7 +28,7 @@
 #' # simulate data retaining the stimulus order shown to subject 2
 #' simulated = simulate_dynamic(true_pars = true,
 #'                              n_blocks  = 16,
-#'                              dataset   = d)
+#'                              dataset   = data_dynamic)
 #' head(simulated)
 #'
 #' #   stim target condition       rt response   mean_v1   mean_v2
@@ -123,7 +123,7 @@ simulate_dynamic <- function(n_blocks  = 16,
                      t0     = true_pars["t0"],
                      mean_v = as.vector(netinput),
                      sd_v   = c(true_pars["sd"], true_pars["sd"]),
-                     silent = T)
+                     silent = TRUE)
 
     # add neural data
     if (!is.null(sigma_gen)){

@@ -23,7 +23,7 @@
 #'
 #' param_draw(base_par = c("a", "b", "t0", "sd"),
 #'            n_drift  = NULL,
-#'            dynamic  = T)
+#'            dynamic  = TRUE)
 #'
 #' #         a         b        t0        sd
 #' # 0.6119832 1.2354445 0.3101643 0.2719001
@@ -35,7 +35,7 @@
 
 param_draw <- function(base_par = c("a", "b", "t0", "sd"),
                        n_drift  = NULL,
-                       dynamic  = F){
+                       dynamic  = FALSE){
 
   # checking for faulty input
   stopifnot(exprs = {
@@ -65,7 +65,7 @@ param_draw <- function(base_par = c("a", "b", "t0", "sd"),
   if (dynamic){
     return(s1[base_par])
   } else{
-    s2 <- sort(rnorm(n_drift, 0.5, 0.1), decreasing = F)
+    s2 <- sort(rnorm(n_drift, 0.5, 0.1), decreasing = FALSE)
     names(s2) <- paste0("v_", seq_len(n_drift))
     return(c(s1[base_par], s2))
   }

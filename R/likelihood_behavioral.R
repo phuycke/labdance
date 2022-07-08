@@ -18,7 +18,7 @@
 #' # get parameters, simulate data and calculate likelihood
 #' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
-#'                   dynamic  = F)
+#'                   dynamic  = FALSE)
 #' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL)
 #' ll.true = likelihood_behavioral(to_optim = true,
@@ -27,7 +27,7 @@
 #' # calculate likelihood for another parameter set
 #' test = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
-#'                   dynamic  = F)
+#'                   dynamic  = FALSE)
 #' ll.test = likelihood_behavioral(to_optim = test,
 #'                                 dataset  = simulated)
 #'
@@ -76,8 +76,8 @@ likelihood_behavioral <- function(to_optim,
       par = c(A       = to_optim[["a"]],
               b       = to_optim[["b"]],
               t0      = to_optim[["t0"]],
-              mean_v1 = F,
-              mean_v2 = F,
+              mean_v1 = FALSE,
+              mean_v2 = FALSE,
               sd_v2   = to_optim[["sd"]])
     } else{
       par = c(A       = to_optim[["a"]],

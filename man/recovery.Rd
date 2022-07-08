@@ -38,7 +38,7 @@ set.seed(2022)
 # dynamic LBA
 true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                   n_drift  = NULL,
-                  dynamic  = T)
+                  dynamic  = TRUE)
 simulated = simulate_data(true_pars = true,
                           dataset   = NULL)
 \dontrun{
@@ -54,7 +54,7 @@ print(rbind(true, recovered[1:length(true)]))
 # neural LBA
 true = param_draw(base_par = c("a", "b", "t0", "sd"),
                   n_drift  = 8,
-                  dynamic  = F)
+                  dynamic  = FALSE)
 simulated = simulate_data(true_pars = true,
                           dataset   = NULL,
                           sigma_gen = 0.01)

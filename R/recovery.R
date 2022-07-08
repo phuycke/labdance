@@ -24,7 +24,7 @@
 #' # dynamic LBA
 #' true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
 #'                   n_drift  = NULL,
-#'                   dynamic  = T)
+#'                   dynamic  = TRUE)
 #' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL)
 #' \dontrun{
@@ -40,7 +40,7 @@
 #' # neural LBA
 #' true = param_draw(base_par = c("a", "b", "t0", "sd"),
 #'                   n_drift  = 8,
-#'                   dynamic  = F)
+#'                   dynamic  = FALSE)
 #' simulated = simulate_data(true_pars = true,
 #'                           dataset   = NULL,
 #'                           sigma_gen = 0.01)
@@ -77,11 +77,11 @@ recovery <- function(base_par,
 
   # determine the type of data
   if ("beta" %in% base_par){
-    dynamic = T
+    dynamic = TRUE
     n_drift = NULL
     l       = length(base_par)
   } else{
-    dynamic = F
+    dynamic = FALSE
     n_drift = length(unique(dataset$repetition))
     l       = length(base_par) + n_drift
   }

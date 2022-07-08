@@ -41,7 +41,7 @@ require(labdance)
 # dynamic LBA
 true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                   n_drift  = NULL,
-                  dynamic  = T)
+                  dynamic  = TRUE)
 simulated = simulate_data(true_pars = true,
                           dataset   = NULL,
                           sigma_gen = NULL)

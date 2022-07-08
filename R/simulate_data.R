@@ -23,7 +23,7 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/data_neural.RData")
+#' data("data_neural")
 #'
 #' # get dLBA parameters
 #' true = param_draw(base_par = c("a", "b", "t0", "sd"),
@@ -34,7 +34,7 @@
 #' # and add neural data
 #' simulated = simulate_data(true_pars = true,
 #'                           sigma_gen = 0.01,
-#'                           dataset   = d)
+#'                           dataset   = data_neural)
 #' head(simulated)
 #'
 #' #   sub_id stim repetition block_nr       rt response    neural

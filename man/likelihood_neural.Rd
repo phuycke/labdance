@@ -29,7 +29,7 @@ set.seed(2022)
 # neural LBA
 true = param_draw(base_par = c("a", "b", "t0", "sd"),
                   n_drift  = 8,
-                  dynamic  = F)
+                  dynamic  = FALSE)
 dataset = simulate_data(true_pars = true,
                         dataset   = NULL,
                         sigma_gen = 0.01)
@@ -40,7 +40,7 @@ likelihood_neural(to_optim = true,
 # dynamic neural LBA
 true = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
                   n_drift  = NULL,
-                  dynamic  = T)
+                  dynamic  = TRUE)
 dataset = simulate_data(true_pars = true,
                         dataset   = NULL,
                         sigma_gen = 0.01)

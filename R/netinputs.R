@@ -19,11 +19,11 @@
 #' require(labdance)
 #'
 #' # load prepared empirical data
-#' load("data/data_dynamic.RData")
+#' data("data_dynamic")
 #'
 #' # simulate netinputs based on data and low beta
 #' ni = netinputs(beta = .2,
-#'                dataset = d)
+#'                dataset = data_dynamic)
 #' print(rbind(ni[[1]][20:25], ni[[2]][20:25]))
 #'
 #' #            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
@@ -32,7 +32,7 @@
 #'
 #' # simulate netinputs based on data and high beta
 #' ni = netinputs(beta = .7,
-#'                dataset = d)
+#'                dataset = data_dynamic)
 #' print(rbind(ni[[1]][20:25], ni[[2]][20:25]))
 #'
 #' #            [,1]      [,2]      [,3]      [,4]     [,5]      [,6]

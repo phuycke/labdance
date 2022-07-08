@@ -21,7 +21,7 @@
 #' set.seed(2022)
 #'
 #' # load prepared empirical data
-#' load("data/data_neural.RData")
+#' data("data_neural")
 #'
 #' # get LBA parameters (8 drift rates)
 #' true = param_draw(base_par = c("a", "b", "t0", "sd"),
@@ -31,7 +31,7 @@
 #' # and add neural data
 #' simulated = simulate_neural(true_pars = true,
 #'                             sigma_gen = 0.01,
-#'                             dataset   = d)
+#'                             dataset   = data_neural)
 #' head(simulated)
 #'
 #' #   sub_id stim repetition block_nr       rt response    neural
@@ -116,7 +116,7 @@ simulate_neural <- function(sub_id    = 1,
                       t0     = true_pars["t0"],
                       mean_v = v,
                       sd_v   = c(true_pars["sd"], true_pars["sd"]),
-                      silent = T)
+                      silent = TRUE)
     df$rt[i] = simulated$rt
     df$response[i] = simulated$response
 
