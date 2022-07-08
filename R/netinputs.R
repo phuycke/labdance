@@ -45,7 +45,6 @@
 
 netinputs <- function(beta    = 0.5,
                       dataset = NULL) {
-
   # stop if the input is not correct
   stopifnot(exprs = {
     (class(beta) %in% c("numeric", "integer"))
@@ -58,7 +57,6 @@ netinputs <- function(beta    = 0.5,
       all(c("stim", "condition") %in% names(dataset))
       })
   }
-
   stim <- diag(4)
   t    <- matrix(c(1, 1, 0, 0, 0, 0, 1, 1),
                  nrow = 4)
@@ -68,48 +66,42 @@ netinputs <- function(beta    = 0.5,
   w_rep <- matrix(0,
                   nrow = nrow(stim),
                   ncol = ncol(t))
-
   # data holder
   df <- data.frame(matrix(0,
                    nrow = ifelse(is.null(dataset), 512, nrow(dataset)),
                    ncol = 4))
   colnames(df) <- c("stim", "condition", "mean_v1", "mean_v2")
-
   # determine the stimuli
   if (is.null(dataset)) {
     df$stim <- rep(1:4, times = 128)
     df$condition <- rep(rep(c("novel", "repeating"), each = 32), times = 8)
-  } else{
+  } else {
     df$stim <- dataset$stim
     df$condition <- dataset$condition
   }
-
   # simulate
   for (i in seq_len(nrow(df))) {
     s <- df$stim[i]
     # input at output units, logistic activation function
     if (df$condition[i] == "novel") {
-      netinput <- 1 / (1 + exp(-(stim[s,] %*% w_nov)))
-    } else{
-      netinput <- 1 / (1 + exp(-(stim[s,] %*% w_rep)))
+      netinput <- 1 / (1 + exp(-(stim[s, ] %*% w_nov)))
+    } else {
+      netinput <- 1 / (1 + exp(-(stim[s, ] %*% w_rep)))
     }
     stopifnot(round(sum(netinput), 10) == 1)
-
     # weight update
-    A <- matrix(stim[s,])
-    B <- (t[s, ] - netinput)
+    temp_a <- matrix(stim[s, ])
+    temp_b <- (t[s, ] - netinput)
     # input at output units, logistic activation function
     if (df$condition[i] == "novel") {
-      w_nov <- w_nov + beta * (A %*% B)
-    } else{
-      w_rep <- w_rep + beta * (A %*% B)
+      w_nov <- w_nov + beta * (temp_a %*% temp_b)
+    } else {
+      w_rep <- w_rep + beta * (temp_a %*% temp_b)
     }
-
     # save the netinputs (used during estimation of LR)
-    df[i,3:4] <- netinput
-
+    df[i, 3:4] <- netinput
     # reset the weights based on random draw
-    if (i %% 32 == 0 & df$condition[i] == "novel") {
+    if (i %% 32 == 0 && df$condition[i] == "novel") {
       w_nov <- matrix(0,
                       nrow = nrow(stim),
                       ncol = ncol(t))

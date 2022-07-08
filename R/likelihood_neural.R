@@ -43,7 +43,6 @@
 
 likelihood_neural <- function(to_optim,
                               dataset = NULL) {
-
   # test for faulty input
   # handle bad input
   stopifnot(exprs = {
@@ -57,7 +56,6 @@ likelihood_neural <- function(to_optim,
       })
   }
   if (!is.null(dataset$mean_v1)) stopifnot((!is.null(dataset$neural)))
-
   # neural LBA
   if ("repetition" %in% names(dataset)) {
     # for nLBA

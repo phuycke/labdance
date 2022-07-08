@@ -4,7 +4,7 @@
 #'     both behavioral and neural data can be inputted to this function, but
 #'     the function also works with one type of data modality. When only
 #'     behavioral data is passed (reaction times and choices), the likelihood
-#'     based on this data is returned. Similarly, the likeilihood based on the
+#'     based on this data is returned. Similarly, the likelihood based on the
 #'     neural data is passed when only this type of data is provided.
 #'
 #' @param to_optim The likelihood for parameter set to_optim is calculated.
@@ -62,15 +62,13 @@
 likelihood_summed <- function(to_optim,
                               dataset   = NULL,
                               sigma_mod = NULL) {
-
-  ll.behavioral <- likelihood_behavioral(to_optim, dataset)
-
+  ll_behavioral <- likelihood_behavioral(to_optim, dataset)
   # for non neural data, only return the behavioral loglikelihood
   if (is.null(dataset$neural)) {
-    return(ll.behavioral)
-  } else{
+    return(ll_behavioral)
+  } else {
     # for neural data, return the sum of both
-    ll.neural <- likelihood_neural(to_optim, dataset)
-    return(ll.behavioral + (1/(2*(sigma_mod)^2)) * ll.neural)
+    ll_neural <- likelihood_neural(to_optim, dataset)
+    return(ll_behavioral + (1 / (2 * (sigma_mod)^2)) * ll_neural)
   }
 }

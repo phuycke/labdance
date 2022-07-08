@@ -9,9 +9,9 @@
 #' @param sigma_gen Optional: only for neural models.
 #'     The variance in the generation of the true neural data.
 #' @param dataset Optional: only when empirical data is available.
-#'     Replaces the stimuli and conditions by information observed in the data. Hence,
-#'     this allows data to be generated relying on stimuli actually seen by
-#'     subjects.
+#'     Replaces the stimuli and conditions by information observed in the data.
+#'     Hence, this allows data to be generated relying on stimuli actually
+#'     seen by subjects.
 #'
 #' @return data.frame containing behavioral and/or neural data.
 #' @examples
@@ -110,7 +110,7 @@ simulate_dynamic <- function(n_blocks  = 16,
     df$stim <- rep(1:4, times = n_blocks * 32 / 4)
     df$condition <- rep(rep(c("novel", "repeating"), each = 32),
                         times = n_blocks / 2)
-  } else{
+  } else {
     df$stim <- dataset$stim
     df$condition <- dataset$condition
   }
@@ -120,20 +120,20 @@ simulate_dynamic <- function(n_blocks  = 16,
     s <- df$stim[i]
     # input at output units, logistic activation function
     if (df$condition[i] == "novel") {
-      netinput <- 1 / (1 + exp(-(stim[s,] %*% w_nov)))
-    } else{
-      netinput <- 1 / (1 + exp(-(stim[s,] %*% w_rep)))
+      netinput <- 1 / (1 + exp(-(stim[s, ] %*% w_nov)))
+    } else {
+      netinput <- 1 / (1 + exp(-(stim[s, ] %*% w_rep)))
     }
     stopifnot(round(sum(netinput), 10) == 1)
 
     # LBA trial estimation where netinputs to output unit serve as v1 and v2
-    df[i,4:5] <- rLBA(1,
-                      A      = true_pars["a"],
-                      b      = true_pars["b"],
-                      t0     = true_pars["t0"],
-                      mean_v = as.vector(netinput),
-                      sd_v   = c(true_pars["sd"], true_pars["sd"]),
-                      silent = TRUE)
+    df[i, 4:5] <- rLBA(1,
+                       A      = true_pars["a"],
+                       b      = true_pars["b"],
+                       t0     = true_pars["t0"],
+                       mean_v = as.vector(netinput),
+                       sd_v   = c(true_pars["sd"], true_pars["sd"]),
+                       silent = TRUE)
 
     # add neural data
     if (!is.null(sigma_gen)) {
@@ -141,21 +141,21 @@ simulate_dynamic <- function(n_blocks  = 16,
     }
 
     # weight update
-    A <- matrix(stim[s,])
-    B <- (t[s, ] - netinput)
+    temp_a <- matrix(stim[s, ])
+    temp_b <- (t[s, ] - netinput)
     # input at output units, logistic activation function
     if (df$condition[i] == "novel") {
-      w_nov <- w_nov + true_pars["beta"] * (A %*% B)
-    } else{
-      w_rep <- w_rep + true_pars["beta"] * (A %*% B)
+      w_nov <- w_nov + true_pars["beta"] * (temp_a %*% temp_b)
+    } else {
+      w_rep <- w_rep + true_pars["beta"] * (temp_a %*% temp_b)
     }
 
     # save stimulus and associated target
-    df[i,6:7] <- netinput
+    df[i, 6:7] <- netinput
     df$target[i] <- which.max(t[s, ])
 
     # reset the weights based on random draw
-    if (i %% 32 == 0 & df$condition[i] == "novel") {
+    if (i %% 32 == 0 && df$condition[i] == "novel") {
       w_nov <- matrix(0,
                       nrow = nrow(stim),
                       ncol = ncol(t))

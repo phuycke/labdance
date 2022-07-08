@@ -32,7 +32,7 @@ Returns sum of likelihoods based on passed data. Note that
     both behavioral and neural data can be inputted to this function, but
     the function also works with one type of data modality. When only
     behavioral data is passed (reaction times and choices), the likelihood
-    based on this data is returned. Similarly, the likeilihood based on the
+    based on this data is returned. Similarly, the likelihood based on the
     neural data is passed when only this type of data is provided.
 }
 \examples{
@@ -63,7 +63,8 @@ ll.n = likelihood_neural(to_optim = true,
 ll.s = likelihood_summed(to_optim  = true,
                          dataset   = simulated,
                          sigma_mod = 0.01)
-# summed LL should be equal to the sum of behavioral LL and neural LL times a constant
+# summed LL should be equal to the sum of behavioral LL and neural LL
+# times a constant
 stopifnot(ll.s == (ll.b + (1/(2*(0.01)^2)) * ll.n))
 
 }

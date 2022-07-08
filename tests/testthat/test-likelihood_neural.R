@@ -20,5 +20,3 @@ test_that("faulty input is effectively handled", {
   expect_error(likelihood_neural(true,
                                  dataset = d_copy))
 })
-
-

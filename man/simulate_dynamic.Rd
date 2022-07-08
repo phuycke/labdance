@@ -12,7 +12,8 @@ simulate_dynamic(
 )
 }
 \arguments{
-\item{n_blocks}{Determines the number of experimental blocks within a dataset.}
+\item{n_blocks}{Determines the number of experimental blocks within a
+dataset.}
 
 \item{true_pars}{The LBA parameters used to generate the data.}
 
@@ -20,9 +21,9 @@ simulate_dynamic(
 The variance in the generation of the true neural data.}
 
 \item{dataset}{Optional: only when empirical data is available.
-Replaces the stimuli and conditions by information observed in the data. Hence,
-this allows data to be generated relying on stimuli actually seen by
-subjects.}
+Replaces the stimuli and conditions by information observed in the data.
+Hence, this allows data to be generated relying on stimuli actually
+seen by subjects.}
 }
 \value{
 data.frame containing behavioral and/or neural data.

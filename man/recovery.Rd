@@ -7,12 +7,13 @@
 recovery(base_par, dataset = NULL, cycles = 500, sigma_mod = NULL)
 }
 \arguments{
-\item{base_par}{The parameters that need to be optimized. For instance, when
-all parameters in the dynamic neural LBA need to be optimized, c("a", "b",
-"t0", "sd") would need to be passed to base_par.}
+\item{base_par}{The parameters that need to be optimized. For instance,
+when all parameters in the dynamic neural LBA need to be optimized,
+c("a", "b", "t0", "sd") would need to be passed to base_par.}
 
-\item{dataset}{The dataset containing the data used in optimization. Contains either
-behavioral data (reaction times, choice), neural data or both.}
+\item{dataset}{The dataset containing the data used in optimization.
+Contains either behavioral data (reaction times, choice), neural data
+or both.}
 
 \item{cycles}{The amount of 'tries' that the optimization method has. More
 precisely, recovery will attempt MLE for a total of cycles tries.}
@@ -25,10 +26,11 @@ true value (sigma_gen) is typically unknown in real life applications.}
 numeric containing named values
 }
 \description{
-Optimization function that attempts to find the parameter set that
-   fits the passed data best. Automatically determines whether passed data comes
-   from a dynamic or non dynamic model. Minimizes the (summed) likelihood using
-   a box constraints approach ("L-BFGS-B" algorithm (Byrd et al., 1995)).
+Optimization function that attempts to find the parameter set
+   that fits the passed data best. Automatically determines whether passed
+   data comes from a dynamic or non dynamic model. Minimizes the (summed)
+   likelihood using a box constraints approach ("L-BFGS-B" algorithm
+   (Byrd et al., 1995)).
 }
 \examples{
 require(labdance)

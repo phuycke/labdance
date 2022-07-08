@@ -17,14 +17,14 @@ this allows data to be generated relying on stimuli actually seen by
 subjects.}
 }
 \value{
-list consisting of M elements (the number of output units), where each
-    subset consists of N elements (the number of trials).
+list consisting of M elements (the number of output units),
+    where each subset consists of N elements (the number of trials).
 }
 \description{
 Generates how the netinputs at the output level of a dynamic
     model evolve over time as a function of the learning rate beta and
-    the weight resets. Since our dynamic model has two output units, netinput
-    has N times 2 values, where N denotes the number of trials.
+    the weight resets. Since our dynamic model has two output units,
+    netinput has N times 2 values, where N denotes the number of trials.
 }
 \examples{
 require(labdance)

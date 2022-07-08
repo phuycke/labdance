@@ -70,25 +70,22 @@ recovery <- function(base_par,
                      dataset   = NULL,
                      cycles    = 500,
                      sigma_mod = NULL) {
-
   stopifnot(exprs = {
     class(cycles) %in% c("numeric", "integer")
     cycles > 0
     class(sigma_mod) %in% c("numeric", "integer")
     sigma_mod > 0
   })
-
   # determine the type of data
   if ("beta" %in% base_par) {
     dynamic <- TRUE
     n_drift <- NULL
     l       <- length(base_par)
-  } else{
+  } else {
     dynamic <- FALSE
     n_drift <- length(unique(dataset$repetition))
     l       <- length(base_par) + n_drift
   }
-
   # actual parameter recovery
   for (q in 1:cycles) {
     o <- tryCatch(optim(param_draw(base_par = base_par,       # param guess
@@ -98,15 +95,16 @@ recovery <- function(base_par,
                         method        = "L-BFGS-B",           # minim method
                         dataset       = dataset,
                         sigma_mod     = sigma_mod,
-                        lower         = rep(0, times = l),    # parameter lower bound
-                        upper         = rep(Inf, times = l),  # parameter upper bound
+                        lower         = rep(0, times = l),    # low bound
+                        upper         = rep(Inf, times = l),  # upper bound
                         control       = list(maxit = 5000),
                         hessian       = TRUE),
-                  error = function(e) {NA})
+                  error = function(e) {
+                           NA})
     # if o is not NA, AND if converged, AND if the LR estimate != 0 --> break
     if (length(o) > 1) {
-      if(o$convergence == 0) {
-        if(!any(o$par < 0.0001)) {
+      if (o$convergence == 0) {
+        if (!any(o$par < 0.0001)) {
           break
         }
       }
@@ -114,7 +112,7 @@ recovery <- function(base_par,
   }
   if (length(o) == 1) {
     return(rep(NA, times = l + 2))
-  } else{
+  } else {
     # save the lowest value of the eigen values of the Hessian
     # all should be positive (> epsilon, with epsilon = 0.01) when minimizing
     h <- min(eigen(o$hessian)$values)

@@ -84,9 +84,8 @@ simulate_data <- function(sub_id    = 1,
   # d(n)LBA
   if ("beta" %in% names(true_pars)) {
     return(simulate_dynamic(n_blocks, true_pars, sigma_gen, dataset))
-  } else{
+  } else {
     # (n)LBA
     return(simulate_neural(sub_id, n_blocks, true_pars, sigma_gen, dataset))
   }
 }
-

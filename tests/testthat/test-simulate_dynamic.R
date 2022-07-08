@@ -34,7 +34,7 @@ test_that("faulty input is effectively handled", {
   # test with dynamic parameters
   true <- param_draw(base_par = c("a", "b", "t0", "sd"),
                      n_drift  = 8,
-                     dynamic  = F)
+                     dynamic  = FALSE)
   expect_error(simulate_dynamic(true_pars = true,
                                 sigma_gen = 0.01,
                                 dataset   = NULL))

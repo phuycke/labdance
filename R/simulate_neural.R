@@ -57,7 +57,6 @@ simulate_neural <- function(sub_id    = 1,
                             true_pars = NULL,
                             sigma_gen = NULL,
                             dataset   = NULL) {
-
   # checking for faulty input
   stopifnot(exprs = {
     class(sub_id) %in% c("numeric", "integer")
@@ -79,23 +78,20 @@ simulate_neural <- function(sub_id    = 1,
       nrow(dataset) > 0
     })
   }
-
   # placeholder for later
   df <- data.frame(rep(sub_id, times = n_blocks * 32))
   colnames(df) <- "sub_id"
-
   # determine the stimulus order and associated repetition
   # (simulated or empirical)
   if (is.null(dataset)) {
     df$stim <- rep(rep(1:4, times = 8), times = n_blocks)
     df$repetition <- rep(rep(1:8, each = 4), times = n_blocks)
     df$block_nr <- rep(1:n_blocks, each = 32)
-  } else{
+  } else {
     df$stim <- dataset$stim
     df$repetition <- dataset$repetition
-    df$block_nr <- rep(1:(nrow(dataset)/32), each = 32)
+    df$block_nr <- rep(1:(nrow(dataset) / 32), each = 32)
   }
-
   # dependent variables
   df$rt <- NA
   df$response <- NA
@@ -103,18 +99,13 @@ simulate_neural <- function(sub_id    = 1,
   if (!is.null(sigma_gen)) {
     df$neural <- NA
   }
-
   # drift rates positively correlated with repetition count
   drifts <- true_pars[grep("v_", names(true_pars))]
-
   for (i in seq_len(nrow(df))) {
     # get stimulus and associated repetition
-    stim       <- df$stim[i]
     repetition <- df$repetition[i]
-
     # determine drift rate based on repetition count
-    v <- c(drifts[repetition], 1-drifts[repetition])
-
+    v <- c(drifts[repetition], 1 - drifts[repetition])
     # simulate an LBA trial
     simulated <- rLBA(1,
                       A      = true_pars["a"],
@@ -125,16 +116,13 @@ simulate_neural <- function(sub_id    = 1,
                       silent = TRUE)
     df$rt[i] <- simulated$rt
     df$response[i] <- simulated$response
-
     # add neural data (a function of the drift rate) is sigma generation
     # is known
     if (!is.null(sigma_gen)) {
       df$neural[i] <- rnorm(1, v, sigma_gen)
     }
   }
-
   # add accuracy condition to check
   levels(df$repetition) <- as.character(1:8)
-
   return(df)
 }

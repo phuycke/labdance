@@ -13,10 +13,11 @@ simulate_neural(
 )
 }
 \arguments{
-\item{sub_id}{The subject identifier. Can be used to generate different datasets
-that each belong to a different "subject".}
+\item{sub_id}{The subject identifier. Can be used to generate different
+datasets that each belong to a different "subject".}
 
-\item{n_blocks}{Determines the number of experimental blocks within a dataset.}
+\item{n_blocks}{Determines the number of experimental blocks within a
+dataset.}
 
 \item{true_pars}{The LBA parameters used to generate the data.}
 
@@ -24,9 +25,9 @@ that each belong to a different "subject".}
 The variance in the generation of the true neural data.}
 
 \item{dataset}{Optional: only when empirical data is available.
-Replaces the stimuli and repetitions by information observed in the data. Hence,
-this allows data to be generated relying on stimuli actually seen by
-subjects.}
+Replaces the stimuli and repetitions by information observed in
+the data. Hence, this allows data to be generated relying on stimuli
+actually seen by subjects.}
 }
 \value{
 data.frame containing behavioral and neural data.
