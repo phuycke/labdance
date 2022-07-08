@@ -2,8 +2,8 @@
 #'
 #' @description Generates how the netinputs at the output level of a dynamic
 #'     model evolve over time as a function of the learning rate beta and
-#'     the weight resets. Since our dynamic model has two output units, netinput
-#'     has N times 2 values, where N denotes the number of trials.
+#'     the weight resets. Since our dynamic model has two output units,
+#'     netinput has N times 2 values, where N denotes the number of trials.
 #'
 #' @param beta The learning rate. Influences the change in model weights. Since
 #'     the netinput is the dot product of the input activation and the weights,
@@ -13,8 +13,8 @@
 #'     this allows data to be generated relying on stimuli actually seen by
 #'     subjects.
 #'
-#' @return list consisting of M elements (the number of output units), where each
-#'     subset consists of N elements (the number of trials).
+#' @return list consisting of M elements (the number of output units),
+#'     where each subset consists of N elements (the number of trials).
 #' @examples
 #' require(labdance)
 #'
@@ -85,7 +85,7 @@ netinputs <- function(beta    = 0.5,
   }
 
   # simulate
-  for (i in 1:nrow(df)) {
+  for (i in seq_len(nrow(df))) {
     s <- df$stim[i]
     # input at output units, logistic activation function
     if (df$condition[i] == "novel") {

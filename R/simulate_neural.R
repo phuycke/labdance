@@ -3,16 +3,17 @@
 #' @description Helper function called by simulate.data() whenever data from
 #'     a neural model (nLBA, dnLBA) needs to be generated.
 #'
-#' @param sub_id The subject identifier. Can be used to generate different datasets
-#'     that each belong to a different "subject".
-#' @param n_blocks Determines the number of experimental blocks within a dataset.
+#' @param sub_id The subject identifier. Can be used to generate different
+#'     datasets that each belong to a different "subject".
+#' @param n_blocks Determines the number of experimental blocks within a
+#'     dataset.
 #' @param true_pars The LBA parameters used to generate the data.
 #' @param sigma_gen Optional: only for neural models.
 #'     The variance in the generation of the true neural data.
 #' @param dataset Optional: only when empirical data is available.
-#'     Replaces the stimuli and repetitions by information observed in the data. Hence,
-#'     this allows data to be generated relying on stimuli actually seen by
-#'     subjects.
+#'     Replaces the stimuli and repetitions by information observed in
+#'     the data. Hence, this allows data to be generated relying on stimuli
+#'     actually seen by subjects.
 #'
 #' @return data.frame containing behavioral and neural data.
 #' @examples
@@ -83,7 +84,8 @@ simulate_neural <- function(sub_id    = 1,
   df <- data.frame(rep(sub_id, times = n_blocks * 32))
   colnames(df) <- "sub_id"
 
-  # determine the stimulus order and associated repetition (simulated or empirical)
+  # determine the stimulus order and associated repetition
+  # (simulated or empirical)
   if (is.null(dataset)) {
     df$stim <- rep(rep(1:4, times = 8), times = n_blocks)
     df$repetition <- rep(rep(1:8, each = 4), times = n_blocks)
@@ -105,7 +107,7 @@ simulate_neural <- function(sub_id    = 1,
   # drift rates positively correlated with repetition count
   drifts <- true_pars[grep("v_", names(true_pars))]
 
-  for (i in 1:nrow(df)) {
+  for (i in seq_len(nrow(df))) {
     # get stimulus and associated repetition
     stim       <- df$stim[i]
     repetition <- df$repetition[i]
@@ -124,7 +126,8 @@ simulate_neural <- function(sub_id    = 1,
     df$rt[i] <- simulated$rt
     df$response[i] <- simulated$response
 
-    # add neural data (a function of the drift rate) is sigma generation is known
+    # add neural data (a function of the drift rate) is sigma generation
+    # is known
     if (!is.null(sigma_gen)) {
       df$neural[i] <- rnorm(1, v, sigma_gen)
     }

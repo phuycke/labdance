@@ -56,11 +56,11 @@ param_draw <- function(base_par = c("a", "b", "t0", "sd"),
   }
 
   s1 <- c(
-    a    <- runif(1, 0, .75),
-    b    <- runif(1, .75, 1.5),
-    t0   <- runif(1, 0.25, 0.75),
-    sd   <- runif(1, 0, 0.5),
-    beta <- runif(1, 0, 1)
+    a    = runif(1, 0, .75),
+    b    = runif(1, .75, 1.5),
+    t0   = runif(1, 0.25, 0.75),
+    sd   = runif(1, 0, 0.5),
+    beta = runif(1, 0, 1)
   )
   if (dynamic) {
     return(s1[base_par])

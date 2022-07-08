@@ -16,12 +16,12 @@ subjects.}
 \item{sigma_mod}{Optional: only needed in dynamic models.
 Neural data that is fed to the optimization algorithm has a certain
 'generative' process of which the 'generative variance' is unknown. For
-instance, we assume that the neural data comes from a normal distribution with
-mean mu and standard deviation sigma. When performing MLE, this sigma gen
-is unknown, and we have to assume a generative variance in our model. This
-assumed generative variance is called sigma_mod, and is needed to determine
-the weight that is given to the neural likelihood in the total sum of
-likelihoods.}
+instance, we assume that the neural data comes from a normal distribution
+with mean mu and standard deviation sigma. When performing MLE, this
+sigma  gen is unknown, and we have to assume a generative variance in
+our model. This assumed generative variance is called sigma_mod, and is
+needed to determine the weight that is given to the neural likelihood
+in the total sum of likelihoods.}
 }
 \value{
 numeric value indicating the likelihood of a parameter set given

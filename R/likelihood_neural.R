@@ -64,7 +64,8 @@ likelihood_neural <- function(to_optim,
     sum_ll <- 0
     for (i in seq_along(unique(dataset$repetition))) {
       sum_ll <- sum_ll + sum((dataset$neural[dataset$repetition == i] -
-                                to_optim[[grep(sprintf("v_%d", i), names(to_optim))]])^2)
+                                to_optim[[grep(sprintf("v_%d", i),
+                                               names(to_optim))]])^2)
     }
     return(sum_ll)
   }

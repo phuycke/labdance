@@ -1,14 +1,16 @@
 #' @title recovery
 #'
-#' @description Optimization function that attempts to find the parameter set that
-#'    fits the passed data best. Automatically determines whether passed data comes
-#'    from a dynamic or non dynamic model. Minimizes the (summed) likelihood using
-#'    a box constraints approach ("L-BFGS-B" algorithm (Byrd et al., 1995)).
-#' @param base_par The parameters that need to be optimized. For instance, when
-#'    all parameters in the dynamic neural LBA need to be optimized, c("a", "b",
-#'    "t0", "sd") would need to be passed to base_par.
-#' @param dataset The dataset containing the data used in optimization. Contains either
-#'     behavioral data (reaction times, choice), neural data or both.
+#' @description Optimization function that attempts to find the parameter set
+#'    that fits the passed data best. Automatically determines whether passed
+#'    data comes from a dynamic or non dynamic model. Minimizes the (summed)
+#'    likelihood using a box constraints approach ("L-BFGS-B" algorithm
+#'    (Byrd et al., 1995)).
+#' @param base_par The parameters that need to be optimized. For instance,
+#'     when all parameters in the dynamic neural LBA need to be optimized,
+#'     c("a", "b", "t0", "sd") would need to be passed to base_par.
+#' @param dataset The dataset containing the data used in optimization.
+#'     Contains either behavioral data (reaction times, choice), neural data
+#'     or both.
 #' @param cycles The amount of 'tries' that the optimization method has. More
 #'     precisely, recovery will attempt MLE for a total of cycles tries.
 #' @param sigma_mod Optional: only needed in neural models.
@@ -89,15 +91,15 @@ recovery <- function(base_par,
 
   # actual parameter recovery
   for (q in 1:cycles) {
-    o <- tryCatch(optim(param_draw(base_par = base_par,                # initial parameter guess
+    o <- tryCatch(optim(param_draw(base_par = base_par,       # param guess
                                    n_drift  = n_drift,
                                    dynamic  = dynamic),
-                        likelihood_summed,                             # goal function to optimize
-                        method        = "L-BFGS-B",                    # minimization method
+                        likelihood_summed,                    # goal function
+                        method        = "L-BFGS-B",           # minim method
                         dataset       = dataset,
                         sigma_mod     = sigma_mod,
-                        lower         = rep(0, times = l),             # parameter lower bound
-                        upper         = rep(Inf, times = l),           # parameter upper bound
+                        lower         = rep(0, times = l),    # parameter lower bound
+                        upper         = rep(Inf, times = l),  # parameter upper bound
                         control       = list(maxit = 5000),
                         hessian       = TRUE),
                   error = function(e) {NA})

@@ -44,7 +44,8 @@ test_that("faulty input is effectively handled", {
 test_that("the output we get is expected", {
   n_blocks <- 12
   d <- simulate_dynamic(n_blocks  = n_blocks,
-                        true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
+                        true_pars = param_draw(base_par = c("a", "b", "t0",
+                                                            "sd", "beta"),
                                                n_drift  = NULL,
                                                dynamic  = TRUE),
                        sigma_gen = NULL)
@@ -52,10 +53,11 @@ test_that("the output we get is expected", {
   expect_equal(ncol(d), 7)
   expect_false("neural" %in% names(d))
   # with neural data
-  d = simulate_dynamic(true_pars = param_draw(base_par = c("a", "b", "t0", "sd", "beta"),
-                                              n_drift  = NULL,
-                                              dynamic  = TRUE),
-                       sigma_gen = 0.01)
+  d <- simulate_dynamic(true_pars = param_draw(base_par = c("a", "b", "t0",
+                                                            "sd", "beta"),
+                                               n_drift  = NULL,
+                                               dynamic  = TRUE),
+                        sigma_gen = 0.01)
   expect_equal(nrow(d), 512)
   expect_equal(ncol(d), 8)
   expect_true("neural" %in% names(d))

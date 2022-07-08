@@ -57,7 +57,7 @@ likelihood_behavioral <- function(to_optim,
       all(c("rt", "response") %in% names(dataset))
       class(dataset$response) %in% c("numeric", "integer")
       min(dataset$response) == 1
-      sort(unique(dataset$choice)) == 1:length(unique(dataset$choice))
+      sort(unique(dataset$response)) == seq_along(unique(dataset$response))
     })
   }
 
@@ -83,14 +83,20 @@ likelihood_behavioral <- function(to_optim,
       par <- c(A       = to_optim[["a"]],
                b       = to_optim[["b"]],
                t0      = to_optim[["t0"]],
-               mean_v1 = to_optim[[grep(sprintf("v_%d", i), names(to_optim))]],
-               mean_v2 = 1-to_optim[[grep(sprintf("v_%d", i), names(to_optim))]],
+               mean_v1 = to_optim[[grep(sprintf("v_%d", i),
+                                        names(to_optim))]],
+               mean_v2 = 1-to_optim[[grep(sprintf("v_%d", i),
+                                          names(to_optim))]],
                sd_v2   = to_optim[["sd"]])
     }
     spar <- par[!grepl("[12]$", names(par))]
 
     # distribution parameters
-    dist_par_names <- unique(sub("[12]$", "", grep("[12]$", names(par), value = TRUE)))
+    dist_par_names <- unique(sub("[12]$",
+                                 "",
+                                 grep("[12]$",
+                                      names(par),
+                                      value = TRUE)))
     dist_par       <- vector("list",
                              length = length(dist_par_names))
     names(dist_par) <- dist_par_names
@@ -102,8 +108,10 @@ likelihood_behavioral <- function(to_optim,
     dist_par$sd_v <- c(dist_par$sd_v, dist_par$sd_v)
 
     if ("beta" %in% names(to_optim)) {
-      # compute netinputs based on the fed in learning rate, and use this as drift rates
-      dist_par$mean_v <- netinputs(beta = to_optim[[grep("beta", names(to_optim))]],
+      # compute netinputs based on the fed in learning rate,
+      # and use this as drift rates
+      dist_par$mean_v <- netinputs(beta = to_optim[[grep("beta",
+                                                         names(to_optim))]],
                                    dataset = dataset)
     }
 

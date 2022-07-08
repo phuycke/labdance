@@ -73,8 +73,10 @@ simulate_data <- function(sub_id    = 1,
   }
   if (!is.null(dataset)) {
     stopifnot(exprs = {
-      xor(all(c("stim", "condition") %in% colnames(dataset)), # dynamic
-          all(c("stim", "repetition", "block_nr") %in% colnames(dataset))) # neural
+          # dynamic
+      xor(all(c("stim", "condition") %in% colnames(dataset)),
+          # neural
+          all(c("stim", "repetition", "block_nr") %in% colnames(dataset)))
       nrow(dataset) > 0
     })
   }

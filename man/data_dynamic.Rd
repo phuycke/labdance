@@ -8,7 +8,8 @@
 An object of class \code{"data.frame"}
 \describe{
  \item{stim}{Code representing a stimulus shown to a subject}
- \item{repetition}{Amount of stimulus repetitions within an experimental block}
+ \item{repetition}{Amount of stimulus repetitions within an experimental
+ block}
  \item{condition}{Whether this block contains novel or repeating stimuli}
  \item{target}{The correct response for this stimulus}
  \item{response}{The response given by the subject}

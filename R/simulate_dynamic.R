@@ -4,7 +4,8 @@
 #'     a dynamic model (dLBA, dnLBA) needs to be generated.
 #'
 #' @param true_pars The LBA parameters used to generate the data.
-#' @param n_blocks Determines the number of experimental blocks within a dataset.
+#' @param n_blocks Determines the number of experimental blocks within a
+#'     dataset.
 #' @param sigma_gen Optional: only for neural models.
 #'     The variance in the generation of the true neural data.
 #' @param dataset Optional: only when empirical data is available.
@@ -91,7 +92,9 @@ simulate_dynamic <- function(n_blocks  = 16,
                   ncol = ncol(t))
 
   df <- data.frame(matrix(NA,
-                          nrow = ifelse(is.null(dataset), n_blocks * 32, nrow(dataset)),
+                          nrow = ifelse(is.null(dataset),
+                                        n_blocks * 32,
+                                        nrow(dataset)),
                           ncol = 7))
   # column names (used later)
   colnames(df) <- c("stim", "target", "condition", "rt", "response",
@@ -105,14 +108,15 @@ simulate_dynamic <- function(n_blocks  = 16,
   # determine the stimuli
   if (is.null(dataset)) {
     df$stim <- rep(1:4, times = n_blocks * 32 / 4)
-    df$condition <- rep(rep(c("novel", "repeating"), each = 32), times = n_blocks / 2)
+    df$condition <- rep(rep(c("novel", "repeating"), each = 32),
+                        times = n_blocks / 2)
   } else{
     df$stim <- dataset$stim
     df$condition <- dataset$condition
   }
 
   # for each trial change the weights
-  for (i in 1:nrow(df)) {
+  for (i in seq_len(nrow(df))) {
     s <- df$stim[i]
     # input at output units, logistic activation function
     if (df$condition[i] == "novel") {
