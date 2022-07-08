@@ -1,22 +1,28 @@
-Package: labdance
 Type: Package
-Title: Linear And Ballistic Dynamic And Neural Criterion Estimation (LABDANCE)
+Package: labdance
+Title: Linear And Ballistic Dynamic And Neural Criterion Estimation
+    (LABDANCE)
 Version: 0.1.0
-Authors@R: person("Pieter", "Huycke", role = c("aut", "cre"),
-                  email = "pieter.huycke@hotmail.com")
+Authors@R: 
+    person("Pieter", "Huycke", , "pieter.huycke@hotmail.com", role = c("aut", "cre"))
 Author: Pieter Huycke [aut, cre]
-Description: The Linear Ballistic Accumulator (LBA; Brown & Heathcote, 2008) is a choice-reaction
-    time model. It aims to describe human decision-making using variations in certain model
-    parameters that are estimated using empirically collected reaction times (RTs) and choice
-    data. However, experimenters often collected other types of data (e.g. EEG data, eye tracking
-    data...) that might also explain how a decision is made. Additionally, learning takes place
-    when humans make decisions, but this is not accounted for by the standard LBA model. This
-    package provides three extensions to the original LBA: the Dynamic LBA (dLBA), the neural
-    (nLBA) and its combination the Dynamic Neural LBA (dnLBA). The dLBA learns over time, and 
-    this is captured in a specific parameter. An added advantage is that this parameter replaces
-    the need for individual drift rate parameters. The nLBA uses collected neural data when finding
-    the most likely parameter set given the available data. To do this, the nLBA assumes that a 
-    relation exists between the neural data and the LBA parameters (specifically the drift rates).
+Description: The Linear Ballistic Accumulator (LBA; Brown & Heathcote,
+    2008) is a choice-reaction time model. It aims to describe human
+    decision-making using variations in certain model parameters that are
+    estimated using empirically collected reaction times (RTs) and choice
+    data. However, experimenters often collected other types of data (e.g.
+    EEG data, eye tracking data...) that might also explain how a decision
+    is made. Additionally, learning takes place when humans make
+    decisions, but this is not accounted for by the standard LBA model.
+    This package provides three extensions to the original LBA: the
+    Dynamic LBA (dLBA), the neural (nLBA) and its combination the Dynamic
+    Neural LBA (dnLBA). The dLBA learns over time, and this is captured in
+    a specific parameter. An added advantage is that this parameter
+    replaces the need for individual drift rate parameters. The nLBA uses
+    collected neural data when finding the most likely parameter set given
+    the available data. To do this, the nLBA assumes that a relation
+    exists between the neural data and the LBA parameters (specifically
+    the drift rates).
 License: GPL-3
 URL: https://github.com/phuycke/labdance
 BugReports: https://github.com/phuycke/labdance/issues
@@ -26,20 +32,20 @@ Imports:
     rtdists,
     stats
 Suggests:
-    testthat (>= 3.0.0),
+    binom,
+    dplyr,
     glba,
     knitr,
-    rmarkdown,
-    dplyr,
-    tidyr,
-    purrr,
     lattice,
     latticeExtra,
-    binom
+    purrr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tidyr
 VignetteBuilder:
     knitr
+Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.2.0
-Config/testthat/edition: 3
